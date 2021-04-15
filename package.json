@@ -7,11 +7,15 @@
     "dev": "webpack --mode development",
     "start": "webpack serve --mode development --open",
     "build": "webpack --mode production",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "homepage": "http://pannacotta98.github.io/vast-challenge-2019-mc1",
   "devDependencies": {
     "copy-webpack-plugin": "^7.0.0",
     "css-loader": "^5.0.2",
+    "gh-pages": "^3.1.0",
     "html-webpack-plugin": "^5.0.0",
     "sass": "^1.32.7",
     "sass-loader": "^11.0.1",
