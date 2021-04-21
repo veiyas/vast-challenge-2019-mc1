@@ -1,4 +1,4 @@
-import { select, scaleBand, scaleLinear, axisBottom, axisLeft } from 'd3';
+import { select, scaleBand, scaleLinear, axisBottom, axisLeft, tickFormat, timeFormat } from 'd3';
 
 export function createHeatmap(data, location) {
     var margin = {top: 30, right: 30, bottom: 30, left: 100},
@@ -13,14 +13,11 @@ export function createHeatmap(data, location) {
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
-    .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Dates and timepoints
     const end = new Date('2020-04-10T00:00:00')
-    for(var timePoints = [], dt = new Date('2020-04-06T00:00:00'); dt <= end; dt.setMinutes(dt.getMinutes() + 5)) {
-    timePoints.push(new Date(dt));
-    }
+    for (var timePoints = [], dt = new Date('2020-04-06T00:00:00'); dt <= end; dt.setMinutes(dt.getMinutes() + 5)) { timePoints.push(new Date(dt)); }
     
     // Labels of row and columns
     const myVars = ["Sewer & Water", "Power", "Roads & Bridges", "Medical", "Buildings", "Shake Intensity"]
@@ -32,7 +29,9 @@ export function createHeatmap(data, location) {
     .domain(timePoints);
     svg.append("g")
     .attr("transform", "translate(0," + height + ")")
-    .call(axisBottom(x))
+    .call(axisBottom(x).
+            tickValues(x.domain().filter(function(d) { return d.getMinutes() == 0 && d.getSeconds() == 0 && d.getHours() == 0}))
+            .tickFormat(x => timeFormat("%B %d")(x)))
 
     // Build Y scales and axis:
     var y = scaleBand()
