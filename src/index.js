@@ -6,6 +6,7 @@ const locationNames = [
   "Palace Hills", "Northwest", "Old Town", "Safe Town", "Southwest", "Downtown", "Wilson Forest",
   "Scenic Vista", "Broadview", "Chapparal", "Terrapin Springs", "Pepper Mill", "Cheddarford",
   "Easton", "Weston", "Southton", "Oak Willow", "East Parton", "West Parton"]
+
 const main = async () => {
   try {
     const data = await csv('data/mc1-reports-data.csv');

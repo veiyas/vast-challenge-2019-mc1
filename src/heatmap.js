@@ -23,7 +23,8 @@ export function createHeatmap(data, location) {
     }
     
     // Labels of row and columns
-    var myVars = ["Sewer & Water", "Power", "Roads & Bridges", "Medical", "Buildings", "Shake Intensity"]
+    const myVars = ["Sewer & Water", "Power", "Roads & Bridges", "Medical", "Buildings", "Shake Intensity"]
+    const csvVariableNames = ["sewer_and_water", "power", "roads_and_bridges", "medical", "buildings", "shake_intensity"]
 
     // Build X scales and axis:
     var x = scaleBand()
@@ -33,9 +34,9 @@ export function createHeatmap(data, location) {
     .attr("transform", "translate(0," + height + ")")
     .call(axisBottom(x))
 
-    // Build X scales and axis:
+    // Build Y scales and axis:
     var y = scaleBand()
-    .range([ height, 0 ])
+    .range([0, height])
     .domain(myVars)
     .padding(0.01);
     svg.append("g")
@@ -47,15 +48,19 @@ export function createHeatmap(data, location) {
     .domain([1,10])
 
     // Populate heatmap
-    svg.selectAll()
+    var column = svg.selectAll()
         .data(data)
         .enter()
-        .append("rect")
-        .attr("x", function(d) { return x(new Date(d['time'])) })
-        .attr("y", function(d) { return 0.1 /*y(d['power'])*/ })
-        .attr("width", x.bandwidth() )
-        .attr("height", y.bandwidth() )
-        .style("fill", function(d) { return myColor(d['power'])} )
+        .append("g");
+        
+        for (let index = 0; index < myVars.length; index++) {
+            column.append("rect")
+            .attr("x", function(d) { return x(new Date(d.time)) })
+            .attr("y", function(d) { return y(myVars[index])})
+            .attr("width", x.bandwidth() )
+            .attr("height", y.bandwidth() )
+            .style("fill", function(d) { return myColor(d[csvVariableNames[index]])})
+        }
 
-        return 0
-    }
+    return "Heatmap created"
+}
