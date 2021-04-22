@@ -11,7 +11,7 @@ const main = async () => {
   try {
     const data = await csv('data/mc1-reports-data.csv');
 
-    for (let index = 0; index < locationNames.length / 6 /* TO DEBUG FASTER */; index++) {
+    for (let index = 0; index <  locationNames.length /* TO DEBUG FASTER locationNames.length*/; index++) {
       createHeatmap(data.filter(d => d['location'] == index + 1), locationNames[index])
     }
   } catch (err) {

@@ -1,19 +1,37 @@
-import { select, scaleBand, scaleLinear, axisBottom, axisLeft, tickFormat, timeFormat } from 'd3';
+import { select, scaleBand, scaleLinear, axisBottom, axisLeft, timeFormat } from 'd3';
 
 export function createHeatmap(data, location) {
-    var margin = {top: 30, right: 30, bottom: 30, left: 100},
+    var margin = {top: 0, right: 30, bottom: 30, left: 100},
     width = 1200 - margin.left - margin.right,
     height = 150 - margin.top - margin.bottom;
 
-    // append the svg object to the body of the page
-    var svg = select("#heatmap")
+    var locationDiv = select("#heatmaps")
+    .append("div")
+    .attr("id", location)
+    .style("height", height + margin.top + margin.bottom + 40 + "px")
+
+    locationDiv
     .append("p")
     .text(location)
+
+    // Create SVG for axes, canvas for heatmap
+    var svg = locationDiv
     .append("svg")
+    .attr("id", "heatmapSVG")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var canvas = locationDiv
+    .append("canvas")
+    .attr("id", "heatmapCanvas")
+    .attr("width", width)
+    .attr("height", height)
+    .style("margin-left", margin.left + "px")
+    .style("margin-top", margin.top + "px")
+
+    var context = canvas.node().getContext('2d')
 
     // Dates and timepoints
     const end = new Date('2020-04-10T00:00:00')
@@ -46,20 +64,15 @@ export function createHeatmap(data, location) {
     .range(["white", "#c90000"])
     .domain([1,10])
 
-    // Populate heatmap
-    var column = svg.selectAll()
-        .data(data)
-        .enter()
-        .append("g");
-        
+    data.forEach(obj => {
+        const dataTimePoint = new Date(obj.time)        
         for (let index = 0; index < myVars.length; index++) {
-            column.append("rect")
-            .attr("x", function(d) { return x(new Date(d.time)) })
-            .attr("y", function(d) { return y(myVars[index])})
-            .attr("width", x.bandwidth() )
-            .attr("height", y.bandwidth() )
-            .style("fill", function(d) { return myColor(d[csvVariableNames[index]])})
+            context.beginPath();
+            context.rect(x(dataTimePoint), y(myVars[index]), x.bandwidth(), y.bandwidth());
+            context.fillStyle = myColor(obj[csvVariableNames[index]])
+            context.fill()
         }
+    })
 
     return "Heatmap created"
 }
