@@ -1,18 +1,26 @@
-import { select, scaleBand, scaleLinear, axisBottom, axisLeft, timeFormat } from 'd3';
+import { select, scaleBand, scaleLinear, axisBottom, axisLeft, timeFormat, axisTop } from 'd3';
 
-export function createHeatmap(data, location) {
-    var margin = {top: 0, right: 30, bottom: 30, left: 100},
+const colors = ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"];
+
+export function createHeatmap(data, location, slot) {
+    const locationNameWidth = 115;
+    var margin = {top: 0, right: 50, bottom: 0, left: 115},
     width = 1200 - margin.left - margin.right,
-    height = 150 - margin.top - margin.bottom;
-
-    var locationDiv = select("#heatmaps")
-    .append("div")
-    .attr("id", location)
-    .style("height", height + margin.top + margin.bottom + 40 + "px")
-
+    height = 75 - margin.top - margin.bottom;
+    
+    if (slot === 0) { select("#heatmaps").append("svg").attr("id", "xAxisSVG"); }
+    // Create div to contain heatmap with a paragraph before it
+    var locationDiv = select("#heatmaps");
     locationDiv
     .append("p")
     .text(location)
+    .style("float", "left")
+    .style("width", locationNameWidth + "px");
+
+    locationDiv = locationDiv
+    .append("div")
+    .attr("id", location)
+    .style("height", height + margin.top + margin.bottom + "px");
 
     // Create SVG for axes, canvas for heatmap
     var svg = locationDiv
@@ -22,7 +30,7 @@ export function createHeatmap(data, location) {
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
+    
     var canvas = locationDiv
     .append("canvas")
     .attr("id", "heatmapCanvas")
@@ -45,11 +53,19 @@ export function createHeatmap(data, location) {
     var x = scaleBand()
     .range([ 0, width ])
     .domain(timePoints);
-    svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(axisBottom(x).
-            tickValues(x.domain().filter(function(d) { return d.getMinutes() == 0 && d.getSeconds() == 0 && d.getHours() == 0}))
-            .tickFormat(x => timeFormat("%B %d")(x)))
+    
+    if (slot == 0) { // Print x-axis on top
+        const horizontalOffset = margin.left + locationNameWidth;
+        const xAxisBarHeight = 20;
+        select("#xAxisSVG")
+        .attr("width", width + margin.left + margin.right + locationNameWidth)
+        .attr("height", 20)
+        .append("g")
+        .attr("transform", "translate(" + horizontalOffset + "," + (xAxisBarHeight-0.5) + ")")
+        .call(axisTop(x).
+                tickValues(x.domain().filter(function(d) { return d.getMinutes() == 0 && d.getSeconds() == 0 && (d.getHours() % 8 == 0)}))
+                .tickFormat(x => timeFormat("%B %d, %H:%M")(x)))
+    }
 
     // Build Y scales and axis:
     var y = scaleBand()
@@ -61,7 +77,7 @@ export function createHeatmap(data, location) {
 
     // Build color scale
     var myColor = scaleLinear()
-    .range(["white", "#c90000"])
+    .range(["white", colors[slot % colors.length]])
     .domain([1,10])
 
     data.forEach(obj => {
