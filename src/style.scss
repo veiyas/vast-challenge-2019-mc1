@@ -1,10 +1,24 @@
 @import 'custom';
 @import '~bootstrap/scss/bootstrap';
 
-#heatmapCanvas, #heatmapSVG {
+$tooltip-height: 110px;
+$tooltip-width: 1200px;
+
+.heatmapCanvas, #heatmapSVG {
     position: absolute;
 }
 
-// #xAxisSVG {
-//     z-index: 0;
-// }
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: $tooltip-width;
+    height: $tooltip-height;
+    padding: 2px;
+    opacity: 0;
+    font: 12px sans-serif;
+    background: white;
+    border: 2px;
+    border-style: solid;
+    border-radius: 8px;
+    pointer-events: none;
+}
