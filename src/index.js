@@ -32,7 +32,8 @@ const main = async () => {
     for (let index = 0; index < locationNames.length; index++) {
       createHeatmap(
         data.filter((d) => d['location'] == index + 1),
-        locationNames[index]
+        locationNames[index],
+        index
       );
     }
 

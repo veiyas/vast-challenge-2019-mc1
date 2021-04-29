@@ -1,6 +1,6 @@
 import { select, scaleBand, scaleLinear, axisBottom, axisLeft, timeFormat, axisTop } from 'd3';
 
-const colors = ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"];
+const colorArray = ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"];
 
 export function createHeatmap(data, location, slot) {
     const locationNameWidth = 115;
@@ -76,8 +76,9 @@ export function createHeatmap(data, location, slot) {
     .call(axisLeft(y));
 
     // Build color scale
+    console.log(colorArray[slot % colorArray.length])
     var myColor = scaleLinear()
-    .range(["white", colors[slot % colors.length]])
+    .range(["white", colorArray[slot % colorArray.length]])
     .domain([1,10])
 
     data.forEach(obj => {
