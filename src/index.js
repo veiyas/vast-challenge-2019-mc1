@@ -1,7 +1,8 @@
-import { csv, select } from 'd3';
+import { csv, select, svg } from 'd3';
 import './style.scss';
 import { createHeatmap } from './heatmap.js';
 // import { Tooltip, Toast, Popover } from 'bootstrap';
+
 const locationNames = [
   'Palace Hills',
   'Northwest',
@@ -36,6 +37,19 @@ const main = async () => {
     }
 
     select('#loading-icon').remove();
+
+    const mapSvgFile = await svg('data/map.svg');
+    select('#map-test').node().append(mapSvgFile.documentElement);
+    select('#map-test')
+      .select('svg')
+      .select('#region-1')
+      .select('path')
+      .style('fill', 'red');
+    select('#map-test')
+      .select('svg')
+      .select('#region-3')
+      .select('path')
+      .style('fill', 'green');
   } catch (err) {
     console.error(err);
   }
