@@ -1,6 +1,6 @@
-import { select, scaleBand, scaleLinear, axisBottom, axisLeft, timeFormat, axisTop } from 'd3';
+import { select, scaleBand, scaleLinear, axisBottom, axisLeft, timeFormat, axisTop, lch, schemeCategory10 } from 'd3';
 
-const colorArray = ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"];
+const colorArray = schemeCategory10.concat(schemeCategory10.map(color => darken(color, 5)));
 const tooltipHeight = 110;
 
 export function createHeatmap(data, location, slot, isAvgPlot) {
@@ -97,11 +97,11 @@ function printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin
     svg.append("g")
     .call(axisLeft(y));
 
+    // console.log(interpolateTurbo(slot/18))
     // Build color scale
     var myColor = scaleLinear()
     .range(["white", colorArray[slot % colorArray.length]])
-    .domain([1,10]);    
-
+    .domain([1,10]);
     if (slot == 0 && !isTooltip) { // Print x-axis on top
         const horizontalOffset = margin.left *2;
         const xAxisBarHeight = 20;
@@ -181,3 +181,8 @@ function createTooltipHeatmap(data, currentCanvas, width, margin) {
 
     printHeatmap(locationData, canvas.node().getContext('2d'), svg, location - 1, false, svg.attr("width"), height, margin, true);
 }
+
+function darken(color, k = 1) {
+    const {l, c, h} = lch(color);
+    return lch(l - 18 * k, c, h);
+  }

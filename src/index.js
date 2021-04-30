@@ -1,4 +1,4 @@
-import { csv, select, svg } from 'd3';
+import { csv, interpolateSinebow, interpolateTurbo, lch, rgb, scaleSequential, schemeCategory10, select, svg } from 'd3';
 import './style.scss';
 import { createHeatmap } from './heatmap.js';
 // import { Tooltip, Toast, Popover } from 'bootstrap';
