@@ -5,24 +5,20 @@ import { createHeatmap } from './heatmap.js';
 import ChoroplethMap from './ChoroplethMap';
 
 const main = async () => {
-  try {
-    const data = await csv('data/mc1-reports-data.csv');
-    // document.getElementById('full-plot').onclick = function () {
-    //   constructHeatmaps(data);
-    // };
-    // document.getElementById('avg-plot').onclick = function () {
-    //   constructHeatmaps(data);
-    // };
+  const data = await csv('data/mc1-reports-data.csv');
+  document.getElementById('full-plot').onclick = function () {
+    constructHeatmaps(data);
+  };
+  document.getElementById('avg-plot').onclick = function () {
+    constructHeatmaps(data);
+  };
 
-    // constructHeatmaps(data);
+  constructHeatmaps(data);
 
-    select('#loading-icon').remove();
+  select('#loading-icon').remove();
 
-    const mapSvgFile = await svg('data/map.svg');
-    const map = new ChoroplethMap(data, mapSvgFile);
-  } catch (err) {
-    console.error(err);
-  }
+  const mapSvgFile = await svg('data/map.svg');
+  const map = new ChoroplethMap(data, mapSvgFile);
 };
 
 const locationNames = [

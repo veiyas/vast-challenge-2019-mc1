@@ -1,9 +1,22 @@
-import { select } from 'd3';
+import { group, mean, select, timeFormat, timeParse } from 'd3';
 
 export default class ChoroplethMap {
   constructor(data, mapSvg) {
-    this.data = data;
+    // this.data = data;
     this.mapSvg = mapSvg;
+
+    this.parseTime = timeParse('%Y-%m-%d %H:%M:%S');
+
+    this.selectedTime = this.parseTime('2020-04-09 17:45:00');
+    this.selectedProp = 'shake_intensity';
+
+    this.data = group(
+      data,
+      (d) => this.parseTime(d.time),
+      (d) => d.location
+    );
+
+    // console.log(this.data.get(this.selectedTime));
 
     this.draw();
   }
@@ -12,18 +25,30 @@ export default class ChoroplethMap {
     // Add the map svg
     select('#map-test').node().append(this.mapSvg.documentElement);
     this.svg = select('#map-test').select('svg');
-    this.svg.style('opacity', 0).transition().duration(500).style('opacity', 1);
 
     // Set map colors
     this.svg
       .select('#regions')
       .selectAll('g')
-      .each(function (d, i, nodes) {
-        const svgElement = select(this).select('*');
-        // Get the numerical id of the geographical region
-        const svgElementMapId = select(this).node().id.split('-')[1];
-        // TODO Color according to data
-        svgElement.style('fill', 'green');
+      .each((d, i, nodes) => {
+        const svgElement = select(nodes[i]).select('*');
+        // The numerical id of the geographical region
+        const regionId = select(nodes[i]).node().id.split('-')[1];
+
+        const dataForTimeAndRegion = this.data
+          .get(this.selectedTime)
+          .get(regionId);
+
+        // Check if there are no reports in the selected region at the selected time
+        if (dataForTimeAndRegion === undefined) {
+          svgElement.style('fill', 'gray');
+          return;
+        }
+
+        const theMean = mean(dataForTimeAndRegion, (d) => d[this.selectedProp]);
+        // console.log(theMean);
+        svgElement.style('fill', 'red');
+        svgElement.style('opacity', theMean / 10); // TODO Real color scale
       });
   }
 

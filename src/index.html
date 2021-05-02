@@ -20,12 +20,29 @@
 
         <ul class="nav nav-pills">
           <p id="loading-text"></p>
-          <input type="radio" id="full-plot" name="drone" value="full-plot" checked>
-          <label for="drone">Full</label>
-          <input type="radio" id="avg-plot" name="drone" value="avg-plot" onclick="main()" unchecked>
-          <label for="drone">Average</label>
-          <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
-          <li class="nav-item"><a href="#" class="nav-link">Test</a></li>
+          <div class="form-check">
+            <input
+              type="radio"
+              id="full-plot"
+              name="drone"
+              value="full-plot"
+              checked
+            />
+            <label class="form-check-label" for="full-plot">Full</label>
+          </div>
+          <div class="form-check">
+            <input
+              type="radio"
+              id="avg-plot"
+              name="drone"
+              value="avg-plot"
+              onclick="main()"
+              unchecked
+            />
+            <label for="drone">Average</label>
+          </div>
+          <!-- <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Test</a></li> -->
         </ul>
       </header>
 
