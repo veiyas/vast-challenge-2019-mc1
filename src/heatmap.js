@@ -4,7 +4,6 @@ const colorArray = schemeCategory10.concat(schemeCategory10.map(color => darken(
 const tooltipHeight = 110;
 
 export function createHeatmap(data, location, slot, isAvgPlot) {
-    console.log("Creating heatmap")
     const margin = {top: 0, right: 50, bottom: 0, left: 115},
     width = 1200 - margin.left - margin.right,
     height =  isAvgPlot ? 40 - margin.top - margin.bottom : 75 - margin.top - margin.bottom;

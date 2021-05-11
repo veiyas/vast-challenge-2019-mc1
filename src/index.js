@@ -43,16 +43,17 @@ const locationNames = [
   'West Parton',
 ];
 
-function constructHeatmaps(data) {
+const constructHeatmaps = async () => {
   document.getElementById('loading-text').textContent = 'Loading...';
-
+  
   for (let index = 0; index < locationNames.length; index++) {
+    const data = await csv('data/location' + (index+1) + '.csv');
     createHeatmap(
-      data.filter((d) => d['location'] == index + 1),
+      data,
       locationNames[index],
       index,
       document.getElementById('avg-plot').checked
-    );
+      );
   }
   document.getElementById('loading-text').textContent = '';
 }
