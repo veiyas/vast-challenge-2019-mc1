@@ -45,17 +45,17 @@ const locationNames = [
 
 const constructHeatmaps = async () => {
   document.getElementById('loading-text').textContent = 'Loading...';
-  
+
   for (let index = 0; index < locationNames.length; index++) {
-    const data = await csv('data/location' + (index+1) + '.csv');
+    const data = await csv('data/location' + (index + 1) + '.csv');
     createHeatmap(
       data,
       locationNames[index],
       index,
       document.getElementById('avg-plot').checked
-      );
+    );
   }
   document.getElementById('loading-text').textContent = '';
-}
+};
 
 main();

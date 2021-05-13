@@ -1,7 +1,10 @@
 import { group, mean, select, timeFormat, timeParse } from 'd3';
+import { StopWatch } from './util';
 
 export default class ChoroplethMap {
   constructor(data, mapSvg) {
+    const stopWatch = new StopWatch('Building cloropleth map');
+
     // this.data = data;
     this.mapSvg = mapSvg;
 
@@ -19,6 +22,7 @@ export default class ChoroplethMap {
     // console.log(this.data.get(this.selectedTime));
 
     this.draw();
+    stopWatch.stop();
   }
 
   draw() {
