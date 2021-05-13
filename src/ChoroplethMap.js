@@ -1,5 +1,6 @@
-import { group, mean, select, timeFormat, timeParse } from 'd3';
+import { extent, group, mean, select, timeFormat, timeParse } from 'd3';
 import { StopWatch } from './util';
+import TimeSelector from './TimeSelector';
 
 export default class ChoroplethMap {
   constructor(data, mapSvg) {
@@ -21,15 +22,22 @@ export default class ChoroplethMap {
 
     // console.log(this.data.get(this.selectedTime));
 
-    this.draw();
-    stopWatch.stop();
-  }
-
-  draw() {
     // Add the map svg
     select('#map-test').node().append(this.mapSvg.documentElement);
     this.svg = select('#map-test').select('svg');
 
+    this.draw();
+    stopWatch.stop();
+
+    new TimeSelector(extent(data, (d) => this.parseTime(d.time)));
+
+    // DEBUG Just testing setTime()
+    setTimeout(() => {
+      this.setTime(new Date(this.parseTime('2020-04-09 16:50:00')));
+    }, 1000);
+  }
+
+  draw() {
     // Set map colors
     this.svg
       .select('#regions')
@@ -45,6 +53,7 @@ export default class ChoroplethMap {
 
         // Check if there are no reports in the selected region at the selected time
         if (dataForTimeAndRegion === undefined) {
+          svgElement.style('opacity', 1);
           svgElement.style('fill', 'gray');
           return;
         }
@@ -57,6 +66,7 @@ export default class ChoroplethMap {
   }
 
   setTime(date) {
-    // TODO
+    this.selectedTime = date;
+    this.draw();
   }
 }

@@ -6,14 +6,14 @@ import ChoroplethMap from './ChoroplethMap';
 
 const main = async () => {
   const data = await csv('data/mc1-reports-data.csv');
-  document.getElementById('full-plot').onclick = function () {
-    constructHeatmaps(data);
-  };
-  document.getElementById('avg-plot').onclick = function () {
-    constructHeatmaps(data);
-  };
+  // document.getElementById('full-plot').onclick = function () {
+  //   constructHeatmaps(data);
+  // };
+  // document.getElementById('avg-plot').onclick = function () {
+  //   constructHeatmaps(data);
+  // };
 
-  constructHeatmaps(data);
+  // constructHeatmaps(data);
 
   select('#loading-icon').remove();
 
