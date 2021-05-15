@@ -3,27 +3,21 @@ import { select, scaleBand, scaleLinear, axisBottom, axisLeft, timeFormat, axisT
 const colorArray = schemeCategory10.concat(schemeCategory10.map(color => darken(color, 5)));
 const tooltipHeight = 110;
 
-export function createHeatmap(data, location, slot, isAvgPlot) {
-    const margin = {top: 0, right: 50, bottom: 0, left: 115},
+export function createHeatmap(data, location, locationID, slot, isAvgPlot) {
+    const margin = {top: 0, right: 50, bottom: 0, left: 250},
     width = 1200 - margin.left - margin.right,
     height =  isAvgPlot ? 40 - margin.top - margin.bottom : 75 - margin.top - margin.bottom;
     
-    if (slot === 0) { select("#heatmaps").html("").append("svg").attr("id", "xAxisSVG"); }
+    if (slot === 0) { select("#heatmaps").html("").append("svg").attr("id", "xAxisSVG").style("left", margin.left); }
     // Create div to contain heatmap with a paragraph before it
     var tooltipDiv = select("#tooltip-div");
     var locationDiv = select("#heatmaps");
-    locationDiv
-    .append("p")
-    .text(location)
-    .style("float", "left")
-    .style("width", margin.left + "px");
-
+    
     locationDiv = locationDiv
     .append("div")
     .attr("id", location)
     .style("height", height + margin.top + margin.bottom + "px");
-
-    // Create SVG for axes, canvas for heatmap
+    
     var svg = locationDiv
     .append("svg")
     .attr("id", "heatmapSVG")
@@ -34,18 +28,23 @@ export function createHeatmap(data, location, slot, isAvgPlot) {
     
     var canvas = locationDiv
     .append("canvas")
-    .attr("id", ("heatmapCanvas" + slot))
+    .attr("id", ("heatmapCanvas" + (locationID+1)))
     .attr("class", "heatmapCanvas")
-    .attr("location", (slot+1))
+    .attr("location", (locationID+1))
     .attr("width", width)
     .attr("height", height)
     .style("margin-left", margin.left + "px")
     .style("margin-top", margin.top + "px")
+    
+    locationDiv
+    .append("p")
+    .text(location + " (" + data.length + ")")
+    .style("width", margin.left + "px");
 
     if(isAvgPlot) {
         canvas
         .on("mouseover", function(d) {
-            var currentCanvas = document.getElementById(d.explicitOriginalTarget.id);
+            const currentCanvas = document.getElementById(d.explicitOriginalTarget.id);
             tooltipDiv
             .transition()
             .duration(100)
@@ -54,7 +53,7 @@ export function createHeatmap(data, location, slot, isAvgPlot) {
             .style("top", (currentCanvas.offsetTop - tooltipHeight) + "px")
             .style("border-color", colorArray[slot]);
 
-            createTooltipHeatmap(data, currentCanvas, width, margin)
+            createTooltipHeatmap(data, slot, width, margin)
         }).on("mouseout", function(d) {
             tooltipDiv.transition()
             .duration(100)
@@ -96,23 +95,21 @@ function printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin
     svg.append("g")
     .call(axisLeft(y));
 
-    // console.log(interpolateTurbo(slot/18))
     // Build color scale
     var myColor = scaleLinear()
     .range(["white", colorArray[slot % colorArray.length]])
     .domain([1,10]);
     if (slot == 0 && !isTooltip) { // Print x-axis on top
-        const horizontalOffset = margin.left *2;
         const xAxisBarHeight = 20;
         select("#xAxisSVG")
         .attr("width", width + margin.left*2 + margin.right)
         .attr("height", 20)
         .append("g")
-        .attr("transform", "translate(" + horizontalOffset + "," + (xAxisBarHeight-0.5) + ")")
+        .attr("transform", "translate(" + margin.left + "," + (xAxisBarHeight-0.5) + ")")
         .call(axisTop(x)
         .tickValues(x.domain().filter(function(d) { return d.getMinutes() == 0 && d.getSeconds() == 0 && (d.getHours() % 8 == 0)}))
         .tickFormat(x => timeFormat("%B %d, %H:%M")(x)));
-    }    
+    }
 
     data.forEach(obj => {
         const dataTimePoint = new Date(obj.time);
@@ -136,7 +133,6 @@ function printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin
     })
 
     if (slot == 18 && !isTooltip) { // Print x-axis on bottom
-        const horizontalOffset = margin.left * 2;
         const xAxisBarHeight = 20;
         select("#heatmaps")
         .append("svg")
@@ -144,16 +140,14 @@ function printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin
         .attr("width", width + margin.left*2 + margin.right)
         .attr("height", 20)
         .append("g")
-        .attr("transform", "translate(" + horizontalOffset + ", 0)")
+        .attr("transform", "translate(" + margin.left + ", -0.5)")
         .call(axisBottom(x)
         .tickValues(x.domain().filter(function(d) { return d.getMinutes() == 0 && d.getSeconds() == 0 && (d.getHours() % 8 == 0)}))
         .tickFormat(x => timeFormat("%B %d, %H:%M")(x)))
     }
 }
 
-function createTooltipHeatmap(data, currentCanvas, width, margin) {
-    const location = currentCanvas.attributes.getNamedItem("location").value;
-    const locationData = data.filter((d) => d['location'] == location);
+function createTooltipHeatmap(data, slot, width, margin) {
     const height = 75 - margin.top - margin.bottom;
     
     var svg = select("#tooltip-div")
@@ -178,7 +172,7 @@ function createTooltipHeatmap(data, currentCanvas, width, margin) {
     .style("left", margin.left + "px")
     .style("top", ((tooltipHeight - height)/1.5) + "px")
 
-    printHeatmap(locationData, canvas.node().getContext('2d'), svg, location - 1, false, svg.attr("width"), height, margin, true);
+    printHeatmap(data, canvas.node().getContext('2d'), svg, slot, false, svg.attr("width"), height, margin, true);
 }
 
 function darken(color, k = 1) {
