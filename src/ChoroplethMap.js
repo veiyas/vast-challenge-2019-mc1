@@ -29,12 +29,17 @@ export default class ChoroplethMap {
     this.draw();
     stopWatch.stop();
 
-    new TimeSelector(extent(data, (d) => this.parseTime(d.time)));
+    new TimeSelector(
+      extent(data, (d) => this.parseTime(d.time)),
+      (newTime) => {
+        this.setTime(newTime);
+      }
+    );
 
-    // DEBUG Just testing setTime()
-    setTimeout(() => {
-      this.setTime(new Date(this.parseTime('2020-04-09 16:50:00')));
-    }, 1000);
+    // // DEBUG Just testing setTime()
+    // setTimeout(() => {
+    //   this.setTime(new Date(this.parseTime('2020-04-09 16:50:00')));
+    // }, 1000);
   }
 
   draw() {
@@ -49,12 +54,12 @@ export default class ChoroplethMap {
 
         const dataForTimeAndRegion = this.data
           .get(this.selectedTime)
-          .get(regionId);
+          ?.get(regionId);
 
         // Check if there are no reports in the selected region at the selected time
         if (dataForTimeAndRegion === undefined) {
           svgElement.style('opacity', 1);
-          svgElement.style('fill', 'gray');
+          svgElement.style('fill', '#D3D3D3');
           return;
         }
 

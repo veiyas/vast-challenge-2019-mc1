@@ -11,7 +11,9 @@ import {
 import { clamp } from './util';
 
 export default class TimeSelector {
-  constructor(extent) {
+  constructor(extent, onChangeCallback) {
+    this.onChangeCallback = onChangeCallback;
+    this.extent = extent;
     this.div = document.getElementById('time-selector');
     const containerWidth = this.div.clientWidth;
     // const containerHeight = this.div.clientHeight;
@@ -63,14 +65,16 @@ export default class TimeSelector {
       .text(timeFormat('%B %d, %H:%M')(this.selectedTime));
 
     this.selector.call(
+      // TODO Fix dragging outside range
       drag().on('drag', (event, d) => {
-        const temp = this.scale.invert(event.x);
+        const temp = this.scale.invert(clamp(event.x, 0, this.width));
         this.selectedTime = this.restrictToDiscreteTimePoints(temp);
         this.selectorText.text(timeFormat('%B %d, %H:%M')(this.selectedTime));
         this.selector.attr(
           'transform',
           `translate(${clamp(event.x, 0, this.width)}, 0)`
         );
+        this.onChangeCallback(this.selectedTime);
       })
     );
   }
