@@ -1,6 +1,7 @@
 import { select, scaleBand, scaleLinear, axisBottom, axisLeft, timeFormat, axisTop, lch, schemeCategory10 } from 'd3';
 
-const colorArray = schemeCategory10.concat(schemeCategory10.map(color => darken(color, 5)));
+// const colorArray = schemeCategory10.concat(schemeCategory10.map(color => darken(color, 5)));
+const colorArray = ["rgb(255,0,0)"];
 const tooltipHeight = 110;
 
 export function createHeatmap(data, location, locationID, slot, isAvgPlot) {
