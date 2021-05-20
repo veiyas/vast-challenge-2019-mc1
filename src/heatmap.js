@@ -5,9 +5,11 @@ const colorArray = ["rgb(255,0,0)"];
 const tooltipHeight = 110;
 
 export function createHeatmap(data, location, locationID, slot, isAvgPlot) {
+    const div = document.getElementById('heatmaps');
+    const containerWidth = div.clientWidth;
     const margin = {top: 0, right: 50, bottom: 0, left: 250},
-    width = 1200 - margin.left - margin.right,
-    height =  isAvgPlot ? 40 - margin.top - margin.bottom : 75 - margin.top - margin.bottom;
+        width = containerWidth - margin.left - margin.right,
+        height =  isAvgPlot ? 40 - margin.top - margin.bottom : 75 - margin.top - margin.bottom;
     
     if (slot === 0) { select("#heatmaps").html("").append("svg").attr("id", "xAxisSVG").style("left", margin.left); }
     // Create div to contain heatmap with a paragraph before it
@@ -47,6 +49,7 @@ export function createHeatmap(data, location, locationID, slot, isAvgPlot) {
         .on("mouseover", function(d) {
             const currentCanvas = document.getElementById(d.explicitOriginalTarget.id);
             tooltipDiv
+            .style("width", containerWidth + 'px')
             .transition()
             .duration(100)
             .style("opacity", 1.0)
@@ -82,7 +85,7 @@ function printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin
     .domain(timePoints);
     if(isTooltip) {
         svg.append("g")
-        .attr("transform", "translate(0, -0.5)")
+        .attr("transform", "translate(0, -0.5)") // why? 
         .call(axisTop(x)
         .tickValues(x.domain().filter(function(d) { return d.getMinutes() == 0 && d.getSeconds() == 0 && (d.getHours() % 8 == 0)}))
         .tickFormat(x => timeFormat("%B %d, %H:%M")(x)));
@@ -103,7 +106,7 @@ function printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin
     if (slot == 0 && !isTooltip) { // Print x-axis on top
         const xAxisBarHeight = 20;
         select("#xAxisSVG")
-        .attr("width", width + margin.left*2 + margin.right)
+        .attr("width", width + margin.left + margin.right)
         .attr("height", 20)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + (xAxisBarHeight-0.5) + ")")
@@ -138,7 +141,7 @@ function printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin
         select("#heatmaps")
         .append("svg")
         .attr("id", "botttom-bar")
-        .attr("width", width + margin.left*2 + margin.right)
+        .attr("width", width + margin.left + margin.right)
         .attr("height", 20)
         .append("g")
         .attr("transform", "translate(" + margin.left + ", -0.5)")

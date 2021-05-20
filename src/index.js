@@ -13,8 +13,8 @@ const main = async () => {
 
   select('#loading-icon').remove();
 
-  const mapSvgFile = await svg('data/map.svg');
-  const map = new ChoroplethMap(data, mapSvgFile);
+  // const mapSvgFile = await svg('data/map.svg');
+  // const map = new ChoroplethMap(data, mapSvgFile);
 };
 
 const locationNames = [

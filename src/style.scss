@@ -2,7 +2,7 @@
 @import '~bootstrap/scss/bootstrap';
 
 $tooltip-height: 110px;
-$tooltip-width: 1200px;
+$tooltip-width: 1200px; // TODO This is likely not needed anymore
 
 .heatmapCanvas, #heatmapSVG {
     position: absolute;
@@ -11,7 +11,6 @@ $tooltip-width: 1200px;
 div.tooltip {
     position: absolute;
     text-align: center;
-    width: $tooltip-width;
     height: $tooltip-height;
     padding: 2px;
     opacity: 0;
