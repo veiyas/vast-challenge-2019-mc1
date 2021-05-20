@@ -60,7 +60,7 @@ const constructHeatmaps = async () => {
       allLocationData[index].data,
       locationNames[allLocationData[index].index - 1],
       allLocationData[index].index, // Location ID
-      index,                        // Slot in heatmap matrix
+      index,                        // Row in heatmap matrix
       document.getElementById('avg-plot').checked
     );
   }
