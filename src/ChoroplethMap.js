@@ -1,4 +1,4 @@
-import { extent, group, mean, select, timeFormat, timeParse } from 'd3';
+import { extent, group, mean, select, timeParse } from 'd3';
 import { StopWatch } from './util';
 import TimeSelector from './TimeSelector';
 
@@ -20,8 +20,6 @@ export default class ChoroplethMap {
       (d) => d.location
     );
 
-    // console.log(this.data.get(this.selectedTime));
-
     // Add the map svg
     select('#map-test').node().append(this.mapSvg.documentElement);
     this.svg = select('#map-test').select('svg');
@@ -35,11 +33,6 @@ export default class ChoroplethMap {
         this.setTime(newTime);
       }
     );
-
-    // // DEBUG Just testing setTime()
-    // setTimeout(() => {
-    //   this.setTime(new Date(this.parseTime('2020-04-09 16:50:00')));
-    // }, 1000);
   }
 
   draw() {

@@ -3,13 +3,15 @@ import './style.scss';
 import { createHeatmap } from './heatmap.js';
 // import { Tooltip, Toast, Popover } from 'bootstrap';
 import ChoroplethMap from './ChoroplethMap';
+import { StopWatch } from './util';
 
 const main = async () => {
   const data = await csv('data/mc1-reports-data.csv');
-  document.getElementById('full-plot').onclick = function () { constructHeatmaps(data);};
-  document.getElementById('avg-plot').onclick = function () { constructHeatmaps(data);};
+  const variableSelector = document.getElementById('variable-select');
+  variableSelector.value = 'Average';
+  variableSelector.onchange = handleVariableChange;
 
-  constructHeatmaps(data);
+  constructHeatmaps('Average');
 
   select('#loading-icon').remove();
 
@@ -39,32 +41,46 @@ const locationNames = [
   'West Parton',
 ];
 
-const constructHeatmaps = async () => {
-  if (document.getElementById('avg-plot').checked) {
-    select("#header-text").text("Average reported severity from each location, sorted by number of reports")
-  } else {
-    select("#header-text").text("Full report of severity from each location, sorted by number of reports")
-  }
+const handleVariableChange = (event) => {
+  const mode = event.target.value;
+  constructHeatmaps(mode);
+};
+
+// Mode is the variable to show or overall things like average
+const constructHeatmaps = async (mode) => {
+  // if (document.getElementById('avg-plot').checked) {
+  //   select('#header-text').text(
+  //     'Average reported severity from each location, sorted by number of reports'
+  //   );
+  // } else {
+  //   select('#header-text').text(
+  //     'Full report of severity from each location, sorted by number of reports'
+  //   );
+  // }
   document.getElementById('loading-text').textContent = 'Loading...';
 
+  let stopWatch = new StopWatch('Loading heatmap csvs');
   // Read all data and sort by number of reports
-  const allLocationData = [[{data: [], location: -1}]]
+  const allLocationData = [[{ data: [], location: -1 }]];
   for (let index = 0; index < locationNames.length; index++) {
     const tmpData = await csv('data/location' + (index + 1) + '.csv');
-    allLocationData[index] = {data: tmpData, index: index+1};
+    allLocationData[index] = { data: tmpData, index: index + 1 };
   }
-  allLocationData.sort((a, b) => a.data.length < b.data.length)
+  allLocationData.sort((a, b) => a.data.length < b.data.length);
+  stopWatch.stop();
 
+  stopWatch = new StopWatch('Drawing heatmaps');
   for (let index = 0; index < locationNames.length; index++) {
     createHeatmap(
       allLocationData[index].data,
       locationNames[allLocationData[index].index - 1],
       allLocationData[index].index, // Location ID
-      index,                        // Row in heatmap matrix
-      document.getElementById('avg-plot').checked
+      index, // Row in heatmap matrix
+      mode === 'Average'
     );
   }
   document.getElementById('loading-text').textContent = '';
+  stopWatch.stop();
 };
 
 main();
