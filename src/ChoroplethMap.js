@@ -45,9 +45,7 @@ export default class ChoroplethMap {
         // The numerical id of the geographical region
         const regionId = select(nodes[i]).node().id.split('-')[1];
 
-        const dataForTimeAndRegion = this.data
-          .get(this.selectedTime)
-          ?.get(regionId);
+        const dataForTimeAndRegion = this.data.get(this.selectedTime)?.get(regionId);
 
         // Check if there are no reports in the selected region at the selected time
         if (dataForTimeAndRegion === undefined) {
