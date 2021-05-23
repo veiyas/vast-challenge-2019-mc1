@@ -11,15 +11,16 @@ import {
 } from 'd3';
 
 // const colorArray = schemeCategory10.concat(schemeCategory10.map(color => darken(color, 5)));
-const colorArray = ['rgb(255,0,0)'];
+const color = 'rgb(255,0,0)';
 const tooltipHeight = 110;
 
-export function createHeatmap(data, location, locationID, slot, isAvgPlot) {
+export function createHeatmap(data, location, locationID, slot, mode) {
+  const isAvgPlot = mode === 'Average';
   const div = document.getElementById('heatmaps');
   const containerWidth = div.clientWidth;
   const margin = { top: 0, right: 50, bottom: 0, left: 250 },
     width = containerWidth - margin.left - margin.right,
-    height = isAvgPlot ? 40 - margin.top - margin.bottom : 75 - margin.top - margin.bottom;
+    height = mode !== 'All' ? 40 - margin.top - margin.bottom : 75 - margin.top - margin.bottom;
 
   if (slot === 0) {
     select('#heatmaps').html('').append('svg').attr('id', 'xAxisSVG').style('left', margin.left);
@@ -56,7 +57,7 @@ export function createHeatmap(data, location, locationID, slot, isAvgPlot) {
     .text(location + ' (' + data.length + ')')
     .style('width', margin.left + 'px');
 
-  if (isAvgPlot) {
+  if (mode !== 'All') {
     canvas
       .on('mouseover', function (d) {
         const currentCanvas = document.getElementById(d.explicitOriginalTarget.id);
@@ -67,7 +68,7 @@ export function createHeatmap(data, location, locationID, slot, isAvgPlot) {
           .style('opacity', 1.0)
           .style('left', currentCanvas.offsetLeft - margin.left + 'px')
           .style('top', currentCanvas.offsetTop - tooltipHeight + 'px')
-          .style('border-color', colorArray[slot]);
+          .style('border-color', 'black');
 
         createTooltipHeatmap(data, slot, width, margin);
       })
@@ -78,12 +79,13 @@ export function createHeatmap(data, location, locationID, slot, isAvgPlot) {
 
   var context = canvas.node().getContext('2d');
 
-  printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin, false);
+  printHeatmap(data, context, svg, slot, mode, width, height, margin, false);
 
   return 'Heatmap created';
 }
 
-function printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin, isTooltip) {
+function printHeatmap(data, context, svg, slot, mode, width, height, margin, isTooltip) {
+  const isAvgPlot = mode === 'Average';
   // Dates and timepoints
   const end = new Date('2020-04-10T00:00:00');
   for (
@@ -96,15 +98,25 @@ function printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin
 
   const myVars = isAvgPlot
     ? ['Severity']
-    : ['Sewer & Water', 'Power', 'Roads & Bridges', 'Medical', 'Buildings', 'Shake Intensity'];
-  const csvVariableNames = [
-    'sewer_and_water',
-    'power',
-    'roads_and_bridges',
-    'medical',
-    'buildings',
-    'shake_intensity',
-  ];
+    : mode === 'All'
+    ? ['Sewer & Water', 'Power', 'Roads & Bridges', 'Medical', 'Buildings', 'Shake Intensity']
+    : [mode];
+  // const csvVariableNames = [
+  //   'sewer_and_water',
+  //   'power',
+  //   'roads_and_bridges',
+  //   'medical',
+  //   'buildings',
+  //   'shake_intensity',
+  // ];
+  const csvVariableNames = new Map([
+    ['Sewer & Water', 'sewer_and_water'],
+    ['Power', 'power'],
+    ['Roads & Bridges', 'roads_and_bridges'],
+    ['Medical', 'medical'],
+    ['Buildings', 'buildings'],
+    ['Shake Intensity', 'shake_intensity'],
+  ]);
 
   // Build X scales and axis:
   var x = scaleBand().range([0, width]).domain(timePoints);
@@ -128,9 +140,7 @@ function printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin
   svg.append('g').call(axisLeft(y));
 
   // Build color scale
-  var myColor = scaleLinear()
-    .range(['white', colorArray[slot % colorArray.length]])
-    .domain([1, 10]);
+  var myColor = scaleLinear().range(['white', color]).domain([1, 10]);
   if (slot == 0 && !isTooltip) {
     // Print x-axis on top
     const xAxisBarHeight = 20;
@@ -154,8 +164,8 @@ function printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin
     const dataTimePoint = new Date(obj.time);
     if (isAvgPlot) {
       var avgSeverity = 0;
-      for (let index = 0; index < csvVariableNames.length; index++) {
-        avgSeverity += obj[csvVariableNames[index]] / csvVariableNames.length;
+      for (const [iLikeCookies, csvName] of csvVariableNames) {
+        avgSeverity += obj[csvName] / csvVariableNames.size;
       }
       context.beginPath();
       context.rect(x(dataTimePoint), y(myVars[0]), x.bandwidth(), y.bandwidth());
@@ -165,7 +175,7 @@ function printHeatmap(data, context, svg, slot, isAvgPlot, width, height, margin
       for (let index = 0; index < myVars.length; index++) {
         context.beginPath();
         context.rect(x(dataTimePoint), y(myVars[index]), x.bandwidth(), y.bandwidth());
-        context.fillStyle = myColor(obj[csvVariableNames[index]]);
+        context.fillStyle = myColor(obj[csvVariableNames.get(myVars[index])]);
         context.fill();
       }
     }
@@ -226,7 +236,7 @@ function createTooltipHeatmap(data, slot, width, margin) {
     canvas.node().getContext('2d'),
     svg,
     slot,
-    false,
+    'All',
     svg.attr('width'),
     height,
     margin,

@@ -41,9 +41,11 @@ const locationNames = [
   'West Parton',
 ];
 
-const handleVariableChange = (event) => {
+const handleVariableChange = async (event) => {
+  event.target.disabled = true;
   const mode = event.target.value;
-  constructHeatmaps(mode);
+  await constructHeatmaps(mode);
+  event.target.disabled = false;
 };
 
 // Mode is the variable to show or overall things like average
@@ -57,7 +59,7 @@ const constructHeatmaps = async (mode) => {
   //     'Full report of severity from each location, sorted by number of reports'
   //   );
   // }
-  document.getElementById('loading-text').textContent = 'Loading...';
+  // document.getElementById('loading-text').textContent = 'Loading...';
 
   let stopWatch = new StopWatch('Loading heatmap csvs');
   // Read all data and sort by number of reports
@@ -76,10 +78,10 @@ const constructHeatmaps = async (mode) => {
       locationNames[allLocationData[index].index - 1],
       allLocationData[index].index, // Location ID
       index, // Row in heatmap matrix
-      mode === 'Average'
+      mode
     );
   }
-  document.getElementById('loading-text').textContent = '';
+  // document.getElementById('loading-text').textContent = '';
   stopWatch.stop();
 };
 
