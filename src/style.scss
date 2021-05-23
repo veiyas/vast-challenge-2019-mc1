@@ -3,20 +3,32 @@
 
 $tooltip-height: 110px;
 
-.heatmapCanvas, #heatmapSVG {
-    position: absolute;
+.heatmapCanvas,
+#heatmapSVG {
+  position: absolute;
 }
 
 div.tooltip {
-    position: absolute;
-    text-align: center;
-    height: $tooltip-height;
-    padding: 2px;
-    opacity: 0;
-    font: 12px sans-serif;
-    background: white;
-    border: 2px;
-    border-style: solid;
-    border-radius: 8px;
-    pointer-events: none;
+  position: absolute;
+  text-align: center;
+  height: $tooltip-height;
+  padding: 2px;
+  opacity: 0;
+  font: 12px sans-serif;
+  background: white;
+  border: 2px;
+  border-style: solid;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+// Note that for this to work, the parent should have position: relative
+.load-overlay {
+  background-color: rgba(255, 255, 255, 0.8);
+  position: absolute;
+  z-index: 100;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
