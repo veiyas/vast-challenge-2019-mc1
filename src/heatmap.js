@@ -66,8 +66,7 @@ export function createHeatmap(data, location, locationID, slot, mode) {
           .transition()
           .duration(100)
           .style('opacity', 1.0)
-          .style('left', currentCanvas.offsetLeft - margin.left + 'px')
-          .style('top', currentCanvas.offsetTop - tooltipHeight + 'px')
+          .style('top', currentCanvas.offsetTop + 'px')
           .style('border-color', 'black');
 
         createTooltipHeatmap(data, slot, width, margin);
@@ -101,14 +100,7 @@ function printHeatmap(data, context, svg, slot, mode, width, height, margin, isT
     : mode === 'All'
     ? ['Sewer & Water', 'Power', 'Roads & Bridges', 'Medical', 'Buildings', 'Shake Intensity']
     : [mode];
-  // const csvVariableNames = [
-  //   'sewer_and_water',
-  //   'power',
-  //   'roads_and_bridges',
-  //   'medical',
-  //   'buildings',
-  //   'shake_intensity',
-  // ];
+
   const csvVariableNames = new Map([
     ['Sewer & Water', 'sewer_and_water'],
     ['Power', 'power'],

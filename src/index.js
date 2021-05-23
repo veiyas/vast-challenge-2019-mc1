@@ -71,7 +71,6 @@ const constructHeatmaps = async (mode) => {
     allLocationData[index] = { data: tmpData, index: index + 1 };
   }
   allLocationData.sort((a, b) => b.data.length - a.data.length);
-  console.dir(allLocationData);
   stopWatch.stop();
 
   stopWatch = new StopWatch('Drawing heatmaps');
