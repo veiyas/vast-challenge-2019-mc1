@@ -59,8 +59,8 @@ export function createHeatmap(data, location, locationID, slot, mode) {
 
   if (mode !== 'All') {
     canvas
-      .on('mouseover', function (d) {
-        const currentCanvas = document.getElementById(d.explicitOriginalTarget.id);
+      .on('mouseover', function (event) {
+        const currentCanvas = event.target;
         tooltipDiv
           .style('width', containerWidth + 'px')
           .transition()
@@ -72,7 +72,7 @@ export function createHeatmap(data, location, locationID, slot, mode) {
 
         createTooltipHeatmap(data, slot, width, margin);
       })
-      .on('mouseout', function (d) {
+      .on('mouseout', function () {
         tooltipDiv.transition().duration(100).style('opacity', 0);
       });
   }

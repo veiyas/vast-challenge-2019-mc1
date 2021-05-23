@@ -65,12 +65,13 @@ const constructHeatmaps = async (mode) => {
 
   let stopWatch = new StopWatch('Loading heatmap csvs');
   // Read all data and sort by number of reports
-  const allLocationData = [[{ data: [], location: -1 }]];
+  const allLocationData = [];
   for (let index = 0; index < locationNames.length; index++) {
     const tmpData = await csv('data/location' + (index + 1) + '.csv');
     allLocationData[index] = { data: tmpData, index: index + 1 };
   }
-  allLocationData.sort((a, b) => a.data.length < b.data.length);
+  allLocationData.sort((a, b) => b.data.length - a.data.length);
+  console.dir(allLocationData);
   stopWatch.stop();
 
   stopWatch = new StopWatch('Drawing heatmaps');
