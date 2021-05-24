@@ -9,38 +9,15 @@
   <body>
     <div class="container-fluid px-5 py-3">
       <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-        <a
-          href="/"
-          class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
-        >
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 text-dark text-decoration-none">
           <span class="fs-4" id="header-text">Vaaaaaaast Challenge</span>
         </a>
 
-        <ul class="nav nav-pills">
-          <p id="loading-text"></p>
-          <!-- <div class="form-check">
-            <input
-              type="radio"
-              id="full-plot"
-              name="drone"
-              value="full-plot"
-              checked
-            />
-            <label class="form-check-label" for="full-plot">Full</label>
-          </div>
-          <div class="form-check">
-            <input
-              type="radio"
-              id="avg-plot"
-              name="drone"
-              value="avg-plot"
-              onclick="main()"
-              unchecked
-            />
-            <label for="drone">Average</label>
-          </div> -->
-          <!-- <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
-          <li class="nav-item"><a href="#" class="nav-link">Test</a></li> -->
+        <ul id="tabs" class="nav nav-pills me-md-auto mx-4">
+          <li class="nav-item"><button id="heatmaps-button" class="nav-link">Heatmaps</button></li>
+          <li class="nav-item">
+            <button id="choropleth-button" class="nav-link">Choropleth Map</button>
+          </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <!-- <input
@@ -66,17 +43,15 @@
       </header>
 
       <main>
-        <div id="loading-icon" class="d-flex justify-content-center m-5">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
+        <div id="heatmaps-container">
+          <div id="heatmaps" class="position-relative"></div>
+          <div class="tooltip" id="tooltip-div"></div>
         </div>
-        <div id="heatmaps" class="position-relative"></div>
-        <div class="tooltip" id="tooltip-div"></div>
 
-        <!-- Testing svg color modification -->
-        <div id="map-test"></div>
-        <div id="time-selector"></div>
+        <div id="choropleth-container">
+          <div id="map-test"></div>
+          <div id="time-selector"></div>
+        </div>
       </main>
     </div>
   </body>

@@ -132,7 +132,7 @@ function printHeatmap(data, context, svg, slot, mode, width, height, margin, isT
   svg.append('g').call(axisLeft(y));
 
   // Build color scale
-  var myColor = scaleLinear().range(['white', color]).domain([1, 10]);
+  var myColor = scaleLinear().range(['white', color]).domain([0, 10]);
   if (slot == 0 && !isTooltip) {
     // Print x-axis on top
     const xAxisBarHeight = 20;

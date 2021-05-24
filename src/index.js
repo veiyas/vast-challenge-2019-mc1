@@ -7,17 +7,22 @@ import { StopWatch } from './util';
 import LoadAnimation from './LoadAnimation';
 
 const main = async () => {
+  setActiveTab('heatmaps');
   const data = await csv('data/mc1-reports-data.csv');
+
+  // Bind event listeners
   const variableSelector = document.getElementById('variable-select');
   variableSelector.value = 'Average';
   variableSelector.onchange = handleVariableChange;
+  document.getElementById('heatmaps-button').onclick = () => setActiveTab('heatmaps');
+  document.getElementById('choropleth-button').onclick = () => setActiveTab('choropleth');
 
   constructHeatmaps('Average');
 
   select('#loading-icon').remove();
 
-  // const mapSvgFile = await svg('data/map.svg');
-  // const map = new ChoroplethMap(data, mapSvgFile);
+  const mapSvgFile = await svg('data/map.svg');
+  const map = new ChoroplethMap(data, mapSvgFile);
 };
 
 const locationNames = [
@@ -46,7 +51,9 @@ const handleVariableChange = async (event) => {
   const spinner = new LoadAnimation(document.getElementById('heatmaps'));
   event.target.disabled = true;
   const mode = event.target.value;
+
   await constructHeatmaps(mode);
+
   event.target.disabled = false;
   spinner.finished();
 };
@@ -85,5 +92,22 @@ const constructHeatmaps = async (mode) => {
   }
   stopWatch.stop();
 };
+
+function setActiveTab(tab) {
+  // Highlight selected tab
+  select('#tabs')
+    .selectChildren()
+    .selectChild()
+    .classed('active', function (d) {
+      return select(this).attr('id').split('-')[0] === tab;
+    });
+
+  // Make the selected pane visible
+  select('main')
+    .selectChildren()
+    .classed('d-none', function (d) {
+      return select(this).attr('id') !== `${tab}-container`;
+    });
+}
 
 main();
