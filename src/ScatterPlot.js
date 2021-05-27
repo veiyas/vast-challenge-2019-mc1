@@ -2,6 +2,7 @@ import { axisBottom, axisLeft } from 'd3-axis';
 import { scaleLinear, scaleOrdinal, scalePoint } from 'd3-scale';
 import { select } from 'd3-selection';
 import { csv, timeParse, group } from 'd3';
+import { myColor } from './globalConfigs';
 
 export default class ScatterPlot {
   constructor(data) {
@@ -56,7 +57,6 @@ export default class ScatterPlot {
     const dataForSelectedTime = this.data.get(this.selectedTime);
     dataForSelectedTime?.forEach((dataForLocation, key) => {
       const occurences = getNumberOfReportsPerValue(dataForLocation, this.selectedProp);
-
       this.dots
         .selectAll('dot')
         .data(occurences)
@@ -65,7 +65,7 @@ export default class ScatterPlot {
         .attr('cx', (d) => this.x(d.rating))
         .attr('cy', this.y(dataForLocation[0].location))
         .attr('r', (d) => Math.sqrt(d.occurences * 0.9))
-        .style('fill', 'red');
+        .style('fill', (d) => myColor(d.rating));
     });
   }
 

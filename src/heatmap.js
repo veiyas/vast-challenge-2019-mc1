@@ -7,12 +7,12 @@ import {
   timeFormat,
   axisTop,
   lch,
-  schemeCategory10,
+  scaleSequential,
+  interpolateYlOrRd,
 } from 'd3';
 import { csvVariableNames } from './mappings';
+import { myColor } from './globalConfigs';
 
-// const colorArray = schemeCategory10.concat(schemeCategory10.map(color => darken(color, 5)));
-const color = 'rgb(255,0,0)';
 const tooltipHeight = 110;
 
 export function createHeatmap(data, location, locationID, slot, mode) {
@@ -88,11 +88,8 @@ function printHeatmap(data, context, svg, slot, mode, width, height, margin, isT
   const isAvgPlot = mode === 'Average';
   // Dates and timepoints
   const end = new Date('2020-04-11T00:00:00');
-  for (
-    var timePoints = [], dt = new Date('2020-04-06T00:00:00');
-    dt <= end;
-    dt.setMinutes(dt.getMinutes() + 5)
-  ) {
+  const timePoints = [];
+  for (let dt = new Date('2020-04-06T00:00:00'); dt <= end; dt.setMinutes(dt.getMinutes() + 5)) {
     timePoints.push(new Date(dt));
   }
 
@@ -123,8 +120,6 @@ function printHeatmap(data, context, svg, slot, mode, width, height, margin, isT
   var y = scaleBand().range([0, height]).domain(myVars).padding(0.01);
   svg.append('g').call(axisLeft(y));
 
-  // Build color scale
-  var myColor = scaleLinear().range(['white', color]).domain([0, 10]);
   if (slot == 0 && !isTooltip) {
     // Print x-axis on top
     const xAxisBarHeight = 20;

@@ -3,6 +3,7 @@ import { StopWatch } from './util';
 import TimeSelector from './TimeSelector';
 import { csvVariableNames } from './mappings';
 import ScatterPlot from './ScatterPlot';
+import { myColor } from './globalConfigs';
 
 export default class ChoroplethMap {
   constructor(data, mapSvg) {
@@ -55,14 +56,13 @@ export default class ChoroplethMap {
         // Check if there are no reports in the selected region at the selected time
         if (dataForTimeAndRegion === undefined) {
           svgElement.style('opacity', 1);
-          svgElement.style('fill', '#D3D3D3');
+          svgElement.style('fill', '#eeeeee');
           return;
         }
 
         const theMean = mean(dataForTimeAndRegion, (d) => d[this.selectedProp]);
         // console.log(theMean);
-        svgElement.style('fill', 'red');
-        svgElement.style('opacity', theMean / 10); // TODO Real color scale
+        svgElement.style('fill', myColor(theMean));
       });
   }
 
