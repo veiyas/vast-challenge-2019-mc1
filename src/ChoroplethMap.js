@@ -85,9 +85,11 @@ export default class ChoroplethMap {
               )
               .style('left', event.pageX + 10 + 'px')
               .style('top', event.pageY - 15 + 'px');
+            this.scatterRef.highlightLocation(+regionId);
           })
           .on('mouseout', () => {
             this.tooltipDiv.transition().duration(50).style('opacity', 0);
+            this.scatterRef.highlightLocation(null);
           });
       });
   }

@@ -46,7 +46,7 @@ export default class ScatterPlot {
       .range([this.height, 0])
       .padding(1);
 
-    this.svg
+    this.xAxis = this.svg
       .append('g')
       .attr('transform', 'translate(0,' + this.height + ')')
       .call(axisBottom(this.x));
@@ -59,7 +59,7 @@ export default class ScatterPlot {
       .style('text-anchor', 'middle')
       .style('color', 'black')
       .text('Rating');
-    this.svg
+    this.yAxis = this.svg
       .append('g')
       .call(axisLeft(this.y).tickFormat((locationId) => locationIdToName(+locationId)));
   }
@@ -68,14 +68,18 @@ export default class ScatterPlot {
     this.dots.html('');
     const dataForSelectedTime = this.data.get(this.selectedTime);
     dataForSelectedTime?.forEach((dataForLocation, key) => {
+      const currentLocationId = dataForLocation[0].location;
       const occurences = getNumberOfReportsPerValue(dataForLocation, this.selectedProp);
       this.dots
+        .append('g')
+        .attr('id', `region-${currentLocationId}-group`)
+        .attr('class', 'dots-group')
         .selectAll('dot')
         .data(occurences)
         .enter()
         .append('circle')
         .attr('cx', (d) => this.x(d.rating))
-        .attr('cy', this.y(dataForLocation[0].location))
+        .attr('cy', this.y(currentLocationId))
         .attr('r', (d) => Math.sqrt(d.occurences * 0.9))
         .style('fill', (d) => myColor(d.rating))
         .style('stroke', 'black')
@@ -93,6 +97,25 @@ export default class ScatterPlot {
       console.error('All or Average are not supported by Scatter map atm');
     this.selectedProp = csvVariableNames.get(mode);
     this.drawPoints();
+  }
+
+  /** Null to reset */
+  highlightLocation(locationId) {
+    this.yAxis
+      .selectAll('.tick')
+      .transition()
+      .duration(locationId ? 50 : 200)
+      .style('opacity', (d) => (!locationId || d === locationId ? 1 : 0.2));
+    this.dots
+      .selectAll('.dots-group')
+      .transition()
+      .duration(locationId ? 50 : 200)
+      .style('opacity', locationId ? 0.2 : 1);
+    this.dots
+      .select(`#region-${locationId}-group`)
+      .transition()
+      .duration(locationId ? 50 : 200)
+      .style('opacity', 1);
   }
 }
 
