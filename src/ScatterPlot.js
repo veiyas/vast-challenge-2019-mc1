@@ -3,6 +3,7 @@ import { scaleLinear, scaleOrdinal, scalePoint } from 'd3-scale';
 import { select } from 'd3-selection';
 import { csv, timeParse, group } from 'd3';
 import { myColor } from './globalConfigs';
+import { csvVariableNames } from './mappings';
 
 export default class ScatterPlot {
   constructor(data) {
@@ -71,6 +72,13 @@ export default class ScatterPlot {
 
   setTime(date) {
     this.selectedTime = date;
+    this.drawPoints();
+  }
+
+  setMode(mode) {
+    if (mode === 'All' || mode === 'Average')
+      console.error('All or Average are not supported by Scatter map atm');
+    this.selectedProp = csvVariableNames.get(mode);
     this.drawPoints();
   }
 }

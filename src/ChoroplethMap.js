@@ -61,7 +61,6 @@ export default class ChoroplethMap {
         }
 
         const theMean = mean(dataForTimeAndRegion, (d) => d[this.selectedProp]);
-        // console.log(theMean);
         svgElement.style('fill', myColor(theMean));
       });
   }
@@ -76,5 +75,6 @@ export default class ChoroplethMap {
       console.error('All or Average are not supported by choropleth map atm');
     this.selectedProp = csvVariableNames.get(mode);
     this.draw();
+    this.scatterRef.setMode(mode);
   }
 }
