@@ -87,7 +87,7 @@ export function createHeatmap(data, location, locationID, slot, mode) {
 function printHeatmap(data, context, svg, slot, mode, width, height, margin, isTooltip) {
   const isAvgPlot = mode === 'Average';
   // Dates and timepoints
-  const end = new Date('2020-04-10T00:00:00');
+  const end = new Date('2020-04-11T00:00:00');
   for (
     var timePoints = [], dt = new Date('2020-04-06T00:00:00');
     dt <= end;
