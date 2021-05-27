@@ -7,6 +7,15 @@ const csvVariableNames = new Map([
   ['Shake Intensity', 'shake_intensity'],
 ]);
 
+const csvVariableNamesToNice = new Map([
+  ['sewer_and_water', 'Sewer & Water'],
+  ['power', 'Power'],
+  ['roads_and_bridges', 'Roads & Bridges'],
+  ['medical', 'Medical'],
+  ['buildings', 'Buildings'],
+  ['shake_intensity', 'Shake Intensity'],
+]);
+
 const locationNames = [
   'Palace Hills',
   'Northwest',
@@ -33,4 +42,4 @@ function locationIdToName(id) {
   return locationNames[id - 1];
 }
 
-export { csvVariableNames, locationNames, locationIdToName };
+export { csvVariableNames, locationNames, locationIdToName, csvVariableNamesToNice };

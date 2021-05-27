@@ -22,6 +22,11 @@ div.tooltip {
   pointer-events: none;
 }
 
+div.tooltip-choropleth {
+  position: absolute;
+  pointer-events: none;
+}
+
 // Note that for this to work, the parent should have position: relative
 .load-overlay {
   background-color: rgba(255, 255, 255, 0.8);

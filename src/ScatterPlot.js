@@ -77,7 +77,9 @@ export default class ScatterPlot {
         .attr('cx', (d) => this.x(d.rating))
         .attr('cy', this.y(dataForLocation[0].location))
         .attr('r', (d) => Math.sqrt(d.occurences * 0.9))
-        .style('fill', (d) => myColor(d.rating));
+        .style('fill', (d) => myColor(d.rating))
+        .style('stroke', 'black')
+        .style('stroke-width', '0.5px');
     });
   }
 

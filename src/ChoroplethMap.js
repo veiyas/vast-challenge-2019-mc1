@@ -1,7 +1,7 @@
 import { extent, group, mean, select, timeParse } from 'd3';
 import { StopWatch } from './util';
 import TimeSelector from './TimeSelector';
-import { csvVariableNames } from './mappings';
+import { csvVariableNames, csvVariableNamesToNice, locationIdToName } from './mappings';
 import ScatterPlot from './ScatterPlot';
 import { myColor } from './globalConfigs';
 
@@ -26,6 +26,11 @@ export default class ChoroplethMap {
     // Add the map svg
     select('#map-test').node().append(this.mapSvg.documentElement);
     this.svg = select('#map-test').select('svg');
+
+    this.tooltipDiv = select('body')
+      .append('div')
+      .attr('class', 'tooltip-choropleth')
+      .style('opacity', 0);
 
     this.draw();
     stopWatch.stop();
@@ -54,14 +59,36 @@ export default class ChoroplethMap {
         const dataForTimeAndRegion = this.data.get(this.selectedTime)?.get(regionId);
 
         // Check if there are no reports in the selected region at the selected time
+        let theMean = undefined;
         if (dataForTimeAndRegion === undefined) {
           svgElement.style('opacity', 1);
           svgElement.style('fill', '#eeeeee');
-          return;
+        } else {
+          theMean = mean(dataForTimeAndRegion, (d) => d[this.selectedProp]);
+          svgElement.style('fill', myColor(theMean));
         }
 
-        const theMean = mean(dataForTimeAndRegion, (d) => d[this.selectedProp]);
-        svgElement.style('fill', myColor(theMean));
+        // TODO Make sure this doesnt add a gazillion eventlisteners
+        svgElement
+          .on('mouseover', (event) => {
+            this.tooltipDiv.transition().duration(50).style('opacity', 1);
+            this.tooltipDiv
+              .html(
+                `
+                <div class="card">
+                  <div class="card-body">
+                    <h6>${locationIdToName(regionId)}</h6>
+                    Average rating: ${theMean !== undefined ? theMean.toFixed(1) : 'Unknown'}
+                  </div>
+                </div>
+              `
+              )
+              .style('left', event.pageX + 10 + 'px')
+              .style('top', event.pageY - 15 + 'px');
+          })
+          .on('mouseout', () => {
+            this.tooltipDiv.transition().duration(50).style('opacity', 0);
+          });
       });
   }
 
