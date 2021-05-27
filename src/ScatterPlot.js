@@ -11,8 +11,8 @@ export default class ScatterPlot {
     const containerWidth = div.clientWidth;
     const containerHeight = div.clientHeight;
     // set the dimensions and margins of the graph
-    this.margin = { top: 10, right: 30, bottom: 40, left: 90 };
-    this.width = 600 - this.margin.left - this.margin.right;
+    this.margin = { top: 10, right: 0, bottom: 40, left: 90 };
+    this.width = containerWidth - this.margin.left - this.margin.right;
     this.height = 600 - this.margin.top - this.margin.bottom;
 
     // append the svg object to the body of the page

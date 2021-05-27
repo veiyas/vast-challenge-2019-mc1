@@ -1,13 +1,5 @@
 import { scaleTime } from 'd3-scale';
-import {
-  select,
-  selectAll,
-  timeParse,
-  timeFormat,
-  axisBottom,
-  brushX,
-  drag,
-} from 'd3';
+import { select, selectAll, timeParse, timeFormat, axisBottom, brushX, drag } from 'd3';
 import { clamp } from './util';
 
 export default class TimeSelector {
@@ -17,7 +9,7 @@ export default class TimeSelector {
     this.div = document.getElementById('time-selector');
     const containerWidth = this.div.clientWidth;
     // const containerHeight = this.div.clientHeight;
-    this.margin = { top: 30, right: 30, bottom: 30, left: 30 };
+    this.margin = { top: 30, right: 0, bottom: 30, left: 250 };
     this.width = containerWidth - this.margin.left - this.margin.right;
     this.height = 100 - this.margin.top - this.margin.bottom;
 
@@ -70,10 +62,7 @@ export default class TimeSelector {
         const temp = this.scale.invert(clamp(event.x, 0, this.width));
         this.selectedTime = this.restrictToDiscreteTimePoints(temp);
         this.selectorText.text(timeFormat('%B %d, %H:%M')(this.selectedTime));
-        this.selector.attr(
-          'transform',
-          `translate(${clamp(event.x, 0, this.width)}, 0)`
-        );
+        this.selector.attr('transform', `translate(${clamp(event.x, 0, this.width)}, 0)`);
         this.onChangeCallback(this.selectedTime);
       })
     );

@@ -25,7 +25,10 @@ export default class ChoroplethMap {
 
     // Add the map svg
     select('#map-test').node().append(this.mapSvg.documentElement);
-    this.svg = select('#map-test').select('svg');
+    this.svg = select('#map-test')
+      .select('svg')
+      .attr('class', 'img-fluid mx-auto d-block')
+      .style('max-height', '600px');
 
     this.tooltipDiv = select('body')
       .append('div')

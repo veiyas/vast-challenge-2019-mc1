@@ -19,7 +19,7 @@ export function createHeatmap(data, location, locationID, slot, mode) {
   const isAvgPlot = mode === 'Average';
   const div = document.getElementById('heatmaps');
   const containerWidth = div.clientWidth;
-  const margin = { top: 0, right: 50, bottom: 0, left: 250 },
+  const margin = { top: 0, right: 0, bottom: 0, left: 250 },
     width = containerWidth - margin.left - margin.right,
     height = mode !== 'All' ? 40 - margin.top - margin.bottom : 75 - margin.top - margin.bottom;
 

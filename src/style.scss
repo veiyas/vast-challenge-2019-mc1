@@ -3,6 +3,14 @@
 
 $tooltip-height: 110px;
 
+svg {
+  overflow: visible;
+}
+
+html {
+  overflow-y: scroll;
+}
+
 .heatmapCanvas,
 #heatmapSVG {
   position: absolute;

@@ -14,10 +14,10 @@
         </a>
 
         <ul id="tabs" class="nav nav-pills me-md-auto mx-4">
-          <li class="nav-item"><button id="heatmaps-button" class="nav-link">Heatmaps</button></li>
+          <!-- <li class="nav-item"><button id="heatmaps-button" class="nav-link">Heatmaps</button></li>
           <li class="nav-item">
             <button id="choropleth-button" class="nav-link">Choropleth Map</button>
-          </li>
+          </li> -->
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <!-- <input
@@ -42,25 +42,32 @@
         </form>
       </header>
 
-      <main>
-        <div id="heatmaps-container">
-          <div id="heatmaps" class="position-relative"></div>
-          <div class="tooltip" id="tooltip-div"></div>
-        </div>
-
-        <div id="choropleth-container" class="container-fluid">
+      <main class="pb-4">
+        <div id="choropleth-container" class="pb-5">
           <div class="row">
+            <h2 class="h5">TODO: Handle All and Average</h2>
+            <p>Also fix hospitals in map</p>
             <div class="col">
-              <h2>TODO: Handle All and Average</h2>
-              <div id="map-test"></div>
+              <div class="row h-100">
+                <div class="col-sm-12 my-auto">
+                  <div id="map-test"></div>
+                </div>
+              </div>
             </div>
             <div class="col">
               <div id="scatter"></div>
             </div>
           </div>
-          <div class="row">
+          <div>
             <div id="time-selector"></div>
           </div>
+        </div>
+
+        <div id="heatmaps-container">
+          <h2 class="h5">Average rating per 5 min interval</h2>
+          <p>The recieved ratings for a variable in a 5 minute interval averaged.</p>
+          <div id="heatmaps" class="position-relative"></div>
+          <div class="tooltip" id="tooltip-div"></div>
         </div>
       </main>
     </div>
