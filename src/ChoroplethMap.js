@@ -30,6 +30,12 @@ export default class ChoroplethMap {
       .attr('class', 'img-fluid mx-auto d-block')
       .style('max-height', '600px');
 
+    // Yes, I misspelled hospital in the svg, but I can't be bothered to fix it
+    select('#map-test')
+      .select('svg')
+      .select('#HostpitalAndPowerPlant')
+      .attr('pointer-events', 'none');
+
     this.tooltipDiv = select('body')
       .append('div')
       .attr('class', 'tooltip-choropleth')

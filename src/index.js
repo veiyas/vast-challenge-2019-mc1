@@ -21,8 +21,6 @@ const main = async () => {
   const variableSelector = document.getElementById('variable-select');
   variableSelector.value = 'Average';
   variableSelector.onchange = (event) => handleVariableChange(event, map);
-  document.getElementById('heatmaps-button').onclick = () => setActiveTab('heatmaps');
-  document.getElementById('choropleth-button').onclick = () => setActiveTab('choropleth');
 };
 
 const handleVariableChange = async (event, map) => {
