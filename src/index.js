@@ -18,7 +18,7 @@ const main = async () => {
   const map = new ChoroplethMap(data, mapSvgFile);
   setActiveTab('heatmaps');
 
-  const scatter = new ScatterPlot(data);
+  // const scatter = new ScatterPlot(data);
 
   // Bind event listeners
   const variableSelector = document.getElementById('variable-select');

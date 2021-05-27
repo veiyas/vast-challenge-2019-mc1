@@ -2,6 +2,7 @@ import { extent, group, mean, select, timeParse } from 'd3';
 import { StopWatch } from './util';
 import TimeSelector from './TimeSelector';
 import { csvVariableNames } from './mappings';
+import ScatterPlot from './ScatterPlot';
 
 export default class ChoroplethMap {
   constructor(data, mapSvg) {
@@ -28,10 +29,13 @@ export default class ChoroplethMap {
     this.draw();
     stopWatch.stop();
 
+    this.scatterRef = new ScatterPlot(data);
+
     new TimeSelector(
       extent(data, (d) => this.parseTime(d.time)),
       (newTime) => {
         this.setTime(newTime);
+        this.scatterRef.setTime(newTime);
       }
     );
   }

@@ -20,9 +20,10 @@ export default class ScatterPlot {
       .attr('height', this.height + this.margin.top + this.margin.bottom)
       .append('g')
       .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+    this.dots = this.svg.append('g').attr('class', 'dots');
 
     this.parseTime = timeParse('%Y-%m-%d %H:%M:%S');
-    this.selectedTime = this.parseTime('2020-04-08 09:10:00');
+    this.selectedTime = this.parseTime('2020-04-06 00:00:00');
     this.selectedProp = 'shake_intensity';
 
     this.ungroupedData = data;
@@ -51,12 +52,12 @@ export default class ScatterPlot {
   }
 
   drawPoints() {
+    this.dots.html('');
     const dataForSelectedTime = this.data.get(this.selectedTime);
     dataForSelectedTime?.forEach((dataForLocation, key) => {
       const occurences = getNumberOfReportsPerValue(dataForLocation, this.selectedProp);
 
-      this.svg
-        .append('g')
+      this.dots
         .selectAll('dot')
         .data(occurences)
         .enter()
@@ -66,6 +67,11 @@ export default class ScatterPlot {
         .attr('r', (d) => Math.sqrt(d.occurences * 0.9))
         .style('fill', 'red');
     });
+  }
+
+  setTime(date) {
+    this.selectedTime = date;
+    this.drawPoints();
   }
 }
 
