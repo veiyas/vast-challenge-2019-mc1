@@ -7,4 +7,30 @@ const csvVariableNames = new Map([
   ['Shake Intensity', 'shake_intensity'],
 ]);
 
-export { csvVariableNames };
+const locationNames = [
+  'Palace Hills',
+  'Northwest',
+  'Old Town',
+  'Safe Town',
+  'Southwest',
+  'Downtown',
+  'Wilson Forest',
+  'Scenic Vista',
+  'Broadview',
+  'Chapparal',
+  'Terrapin Springs',
+  'Pepper Mill',
+  'Cheddarford',
+  'Easton',
+  'Weston',
+  'Southton',
+  'Oak Willow',
+  'East Parton',
+  'West Parton',
+];
+
+function locationIdToName(id) {
+  return locationNames[id - 1];
+}
+
+export { csvVariableNames, locationNames, locationIdToName };

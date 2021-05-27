@@ -3,7 +3,7 @@ import { scaleLinear, scaleOrdinal, scalePoint } from 'd3-scale';
 import { select } from 'd3-selection';
 import { csv, timeParse, group } from 'd3';
 import { myColor } from './globalConfigs';
-import { csvVariableNames } from './mappings';
+import { csvVariableNames, locationIdToName } from './mappings';
 
 export default class ScatterPlot {
   constructor(data) {
@@ -11,7 +11,7 @@ export default class ScatterPlot {
     const containerWidth = div.clientWidth;
     const containerHeight = div.clientHeight;
     // set the dimensions and margins of the graph
-    this.margin = { top: 10, right: 30, bottom: 30, left: 60 };
+    this.margin = { top: 10, right: 30, bottom: 40, left: 90 };
     this.width = 600 - this.margin.left - this.margin.right;
     this.height = 600 - this.margin.top - this.margin.bottom;
 
@@ -50,7 +50,18 @@ export default class ScatterPlot {
       .append('g')
       .attr('transform', 'translate(0,' + this.height + ')')
       .call(axisBottom(this.x));
-    this.svg.append('g').call(axisLeft(this.y));
+    this.svg
+      .append('text')
+      .attr(
+        'transform',
+        'translate(' + this.width / 2 + ' ,' + (this.height + this.margin.top + 25) + ')'
+      )
+      .style('text-anchor', 'middle')
+      .style('color', 'black')
+      .text('Rating');
+    this.svg
+      .append('g')
+      .call(axisLeft(this.y).tickFormat((locationId) => locationIdToName(+locationId)));
   }
 
   drawPoints() {

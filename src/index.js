@@ -5,7 +5,7 @@ import { createHeatmap } from './heatmap.js';
 import ChoroplethMap from './ChoroplethMap';
 import { StopWatch } from './util';
 import LoadAnimation from './LoadAnimation';
-import ScatterPlot from './ScatterPlot';
+import { locationNames } from './mappings';
 
 const main = async () => {
   const data = await csv('data/mc1-reports-data.csv');
@@ -18,8 +18,6 @@ const main = async () => {
   const map = new ChoroplethMap(data, mapSvgFile);
   setActiveTab('heatmaps');
 
-  // const scatter = new ScatterPlot(data);
-
   // Bind event listeners
   const variableSelector = document.getElementById('variable-select');
   variableSelector.value = 'Average';
@@ -27,28 +25,6 @@ const main = async () => {
   document.getElementById('heatmaps-button').onclick = () => setActiveTab('heatmaps');
   document.getElementById('choropleth-button').onclick = () => setActiveTab('choropleth');
 };
-
-const locationNames = [
-  'Palace Hills',
-  'Northwest',
-  'Old Town',
-  'Safe Town',
-  'Southwest',
-  'Downtown',
-  'Wilson Forest',
-  'Scenic Vista',
-  'Broadview',
-  'Chapparal',
-  'Terrapin Springs',
-  'Pepper Mill',
-  'Cheddarford',
-  'Easton',
-  'Weston',
-  'Southton',
-  'Oak Willow',
-  'East Parton',
-  'West Parton',
-];
 
 const handleVariableChange = async (event, map) => {
   const spinner = new LoadAnimation(document.getElementById('heatmaps'));
