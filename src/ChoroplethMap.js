@@ -1,6 +1,7 @@
 import { extent, group, mean, select, timeParse } from 'd3';
 import { StopWatch } from './util';
 import TimeSelector from './TimeSelector';
+import { csvVariableNames } from './mappings';
 
 export default class ChoroplethMap {
   constructor(data, mapSvg) {
@@ -11,7 +12,7 @@ export default class ChoroplethMap {
 
     this.parseTime = timeParse('%Y-%m-%d %H:%M:%S');
 
-    this.selectedTime = this.parseTime('2020-04-09 17:45:00');
+    this.selectedTime = this.parseTime('2020-04-06 00:00:00');
     this.selectedProp = 'shake_intensity';
 
     this.data = group(
@@ -63,6 +64,13 @@ export default class ChoroplethMap {
 
   setTime(date) {
     this.selectedTime = date;
+    this.draw();
+  }
+
+  setMode(mode) {
+    if (mode === 'All' || mode === 'Average')
+      console.error('All or Average are not supported by choropleth map atm');
+    this.selectedProp = csvVariableNames.get(mode);
     this.draw();
   }
 }

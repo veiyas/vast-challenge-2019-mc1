@@ -5,17 +5,10 @@ import { createHeatmap } from './heatmap.js';
 import ChoroplethMap from './ChoroplethMap';
 import { StopWatch } from './util';
 import LoadAnimation from './LoadAnimation';
+import ScatterPlot from './ScatterPlot';
 
 const main = async () => {
-  setActiveTab('heatmaps');
   const data = await csv('data/mc1-reports-data.csv');
-
-  // Bind event listeners
-  const variableSelector = document.getElementById('variable-select');
-  variableSelector.value = 'Average';
-  variableSelector.onchange = handleVariableChange;
-  document.getElementById('heatmaps-button').onclick = () => setActiveTab('heatmaps');
-  document.getElementById('choropleth-button').onclick = () => setActiveTab('choropleth');
 
   constructHeatmaps('Average');
 
@@ -23,6 +16,16 @@ const main = async () => {
 
   const mapSvgFile = await svg('data/map.svg');
   const map = new ChoroplethMap(data, mapSvgFile);
+  setActiveTab('heatmaps');
+
+  const scatter = new ScatterPlot(data);
+
+  // Bind event listeners
+  const variableSelector = document.getElementById('variable-select');
+  variableSelector.value = 'Average';
+  variableSelector.onchange = (event) => handleVariableChange(event, map);
+  document.getElementById('heatmaps-button').onclick = () => setActiveTab('heatmaps');
+  document.getElementById('choropleth-button').onclick = () => setActiveTab('choropleth');
 };
 
 const locationNames = [
@@ -47,11 +50,12 @@ const locationNames = [
   'West Parton',
 ];
 
-const handleVariableChange = async (event) => {
+const handleVariableChange = async (event, map) => {
   const spinner = new LoadAnimation(document.getElementById('heatmaps'));
   event.target.disabled = true;
   const mode = event.target.value;
 
+  await map.setMode(mode);
   await constructHeatmaps(mode);
 
   event.target.disabled = false;

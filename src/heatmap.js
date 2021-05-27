@@ -9,6 +9,7 @@ import {
   lch,
   schemeCategory10,
 } from 'd3';
+import { csvVariableNames } from './mappings';
 
 // const colorArray = schemeCategory10.concat(schemeCategory10.map(color => darken(color, 5)));
 const color = 'rgb(255,0,0)';
@@ -100,15 +101,6 @@ function printHeatmap(data, context, svg, slot, mode, width, height, margin, isT
     : mode === 'All'
     ? ['Sewer & Water', 'Power', 'Roads & Bridges', 'Medical', 'Buildings', 'Shake Intensity']
     : [mode];
-
-  const csvVariableNames = new Map([
-    ['Sewer & Water', 'sewer_and_water'],
-    ['Power', 'power'],
-    ['Roads & Bridges', 'roads_and_bridges'],
-    ['Medical', 'medical'],
-    ['Buildings', 'buildings'],
-    ['Shake Intensity', 'shake_intensity'],
-  ]);
 
   // Build X scales and axis:
   var x = scaleBand().range([0, width]).domain(timePoints);
