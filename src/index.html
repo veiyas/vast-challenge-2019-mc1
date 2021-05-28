@@ -31,7 +31,6 @@
           </button> -->
           <select id="variable-select" class="form-select" aria-label="Default select example">
             <option selected>Average</option>
-            <option>All</option>
             <option>Sewer & Water</option>
             <option>Power</option>
             <option>Roads & Bridges</option>
@@ -64,11 +63,15 @@
         </div>
 
         <div id="heatmaps-container">
-          <h2 class="h5">Average rating per 5 min interval</h2>
+          <h2 class="h5">Average rating per 5 min interval over time</h2>
           <p>
             The recieved ratings for a variable in a 5 minute interval averaged. Numbers in
             parenthesis are the total number of reports for that location.
           </p>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="show-all" />
+            <label class="form-check-label" for="show-all">Show all categories</label>
+          </div>
           <div id="heatmaps" class="position-relative"></div>
           <div class="tooltip" id="tooltip-div"></div>
         </div>

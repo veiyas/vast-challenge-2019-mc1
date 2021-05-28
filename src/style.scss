@@ -16,6 +16,12 @@ html {
   position: absolute;
 }
 
+#heatmaps-container {
+  // HACK to prevent page repositioning when removing and readding heatmaps
+  // im soo tireeed
+  min-height: 1500px;
+}
+
 div.tooltip {
   position: absolute;
   text-align: center;

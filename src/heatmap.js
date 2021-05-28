@@ -111,7 +111,7 @@ function printHeatmap(data, context, svg, slot, mode, width, height, margin, isT
   }
 
   // Build Y scales and axis:
-  var y = scaleBand().range([0, height]).domain(myVars).padding(0.01);
+  var y = scaleBand().range([0, height]).domain(myVars);
   svg.append('g').call(axisLeft(y));
 
   if (slot == 0 && !isTooltip) {

@@ -24,6 +24,8 @@ const main = async () => {
   const variableSelector = document.getElementById('variable-select');
   variableSelector.value = 'Average';
   variableSelector.onchange = (event) => handleVariableChange(event, map, processedData);
+  document.getElementById('show-all').onclick = (event) =>
+    handleShowAllToggle(event, map, processedData);
 
   spinner.finished();
 };
@@ -33,11 +35,19 @@ const handleVariableChange = async (event, map, processedData) => {
   event.target.disabled = true;
   const mode = event.target.value;
 
+  const isAllChecked = select('#show-all').property('checked');
+
   await map.setMode(mode);
-  await constructHeatmaps(mode, processedData);
+  await constructHeatmaps(isAllChecked ? 'All' : mode, processedData);
 
   event.target.disabled = false;
   spinner.finished();
+};
+
+const handleShowAllToggle = async (event, map, processedData) => {
+  const mode = select('#variable-select').property('value');
+  const isAllChecked = select('#show-all').property('checked');
+  await constructHeatmaps(isAllChecked ? 'All' : mode, processedData);
 };
 
 // Mode is the variable to show or overall things like average
