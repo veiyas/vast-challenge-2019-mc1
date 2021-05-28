@@ -5,6 +5,8 @@ import { csvVariableNames, csvVariableNamesToNice, locationIdToName } from './ma
 import ScatterPlot from './ScatterPlot';
 import { myColor } from './globalConfigs';
 
+const timeStep = 60; // Minutes, should match the grouping of the data!
+
 export default class ChoroplethMap {
   constructor(data, mapSvg) {
     const stopWatch = new StopWatch('Building cloropleth map');
@@ -39,7 +41,7 @@ export default class ChoroplethMap {
     stopWatch.stop();
 
     this.scatterRef = new ScatterPlot(data);
-    new TimeSelector(data.timeExtent, (newTime) => {
+    new TimeSelector(data.timeExtent, timeStep, (newTime) => {
       this.setTime(newTime);
       this.scatterRef.setTime(newTime);
     });
@@ -55,7 +57,7 @@ export default class ChoroplethMap {
         // The numerical id of the geographical region
         const regionId = select(nodes[i]).node().id.split('-')[1];
 
-        const dataForTimeAndRegion = this.data.groupedByTimeAndLocation
+        const dataForTimeAndRegion = this.data.groupedByHourAndLocation
           .get(this.selectedTime)
           ?.get(regionId);
 

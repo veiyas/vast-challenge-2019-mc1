@@ -3,7 +3,8 @@ import { select, selectAll, timeParse, timeFormat, axisBottom, brushX, drag } fr
 import { clamp } from './util';
 
 export default class TimeSelector {
-  constructor(extent, onChangeCallback) {
+  constructor(extent, timeStep, onChangeCallback) {
+    this.timeStep = timeStep;
     this.onChangeCallback = onChangeCallback;
     this.extent = extent;
     this.div = document.getElementById('time-selector');
@@ -69,7 +70,7 @@ export default class TimeSelector {
   }
 
   restrictToDiscreteTimePoints(time) {
-    const coeff = 1000 * 60 * 5;
+    const coeff = 1000 * 60 * this.timeStep;
     return new Date(Math.round(time.getTime() / coeff) * coeff);
   }
 }

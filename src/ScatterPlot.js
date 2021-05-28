@@ -61,7 +61,7 @@ export default class ScatterPlot {
 
   drawPoints() {
     this.dots.html('');
-    const dataForSelectedTime = this.data.groupedByTimeAndLocation.get(this.selectedTime);
+    const dataForSelectedTime = this.data.groupedByHourAndLocation.get(this.selectedTime);
     dataForSelectedTime?.forEach((dataForLocation, key) => {
       const currentLocationId = dataForLocation[0].location;
       const occurences = getNumberOfReportsPerValue(dataForLocation, this.selectedProp);

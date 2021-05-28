@@ -22,6 +22,12 @@ export default class ProcessedData {
       (d) => d.location
     );
 
+    this.groupedByHourAndLocation = group(
+      this.data,
+      (d) => timeHour.floor(this.parseTime(d.time)),
+      (d) => d.location
+    );
+
     this.groupedByLocationAndTime = group(
       this.data,
       (d) => d.location,
