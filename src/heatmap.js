@@ -9,13 +9,14 @@ import {
   lch,
   scaleSequential,
   interpolateYlOrRd,
+  mean,
 } from 'd3';
 import { csvVariableNames } from './mappings';
 import { myColor } from './globalConfigs';
 
 const tooltipHeight = 110;
 
-export function createHeatmap(data, location, locationID, slot, mode) {
+export function createHeatmap(data, location, locationID, slot, mode, totNumReports) {
   const isAvgPlot = mode === 'Average';
   const div = document.getElementById('heatmaps');
   const containerWidth = div.clientWidth;
@@ -55,7 +56,7 @@ export function createHeatmap(data, location, locationID, slot, mode) {
 
   locationDiv
     .append('p')
-    .text(location + ' (' + data.length + ')')
+    .text(location + ' (' + totNumReports + ')')
     .style('width', margin.left + 'px');
 
   if (mode !== 'All') {
@@ -139,23 +140,31 @@ function printHeatmap(data, context, svg, slot, mode, width, height, margin, isT
       );
   }
 
-  data.forEach((obj) => {
-    const dataTimePoint = new Date(obj.time);
+  data.forEach((dataPointsAtTime, time) => {
     if (isAvgPlot) {
-      var avgSeverity = 0;
+      const means = [];
       for (const [iLikeCookies, csvName] of csvVariableNames) {
-        avgSeverity += obj[csvName] / csvVariableNames.size;
+        const theMean = mean(dataPointsAtTime, (d) => d[csvName]);
+        if (theMean !== undefined) {
+          means.push(theMean);
+        }
       }
-      context.beginPath();
-      context.rect(x(dataTimePoint), y(myVars[0]), x.bandwidth(), y.bandwidth());
-      context.fillStyle = myColor(avgSeverity);
-      context.fill();
+      const avgSeverity = mean(means);
+      if (avgSeverity !== undefined) {
+        context.beginPath();
+        context.rect(x(time), y(myVars[0]), x.bandwidth(), y.bandwidth());
+        context.fillStyle = myColor(avgSeverity);
+        context.fill();
+      }
     } else {
       for (let index = 0; index < myVars.length; index++) {
-        context.beginPath();
-        context.rect(x(dataTimePoint), y(myVars[index]), x.bandwidth(), y.bandwidth());
-        context.fillStyle = myColor(obj[csvVariableNames.get(myVars[index])]);
-        context.fill();
+        const theMean = mean(dataPointsAtTime, (d) => d[csvVariableNames.get(myVars[index])]);
+        if (theMean !== undefined) {
+          context.beginPath();
+          context.rect(x(time), y(myVars[index]), x.bandwidth(), y.bandwidth());
+          context.fillStyle = myColor(theMean);
+          context.fill();
+        }
       }
     }
   });

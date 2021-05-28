@@ -9,19 +9,13 @@ export default class ChoroplethMap {
   constructor(data, mapSvg) {
     const stopWatch = new StopWatch('Building cloropleth map');
 
-    // this.data = data;
+    this.data = data;
     this.mapSvg = mapSvg;
 
     this.parseTime = timeParse('%Y-%m-%d %H:%M:%S');
 
     this.selectedTime = this.parseTime('2020-04-06 00:00:00');
     this.selectedProp = 'shake_intensity';
-
-    this.data = group(
-      data,
-      (d) => this.parseTime(d.time),
-      (d) => d.location
-    );
 
     // Add the map svg
     select('#map-test').node().append(this.mapSvg.documentElement);
@@ -45,14 +39,10 @@ export default class ChoroplethMap {
     stopWatch.stop();
 
     this.scatterRef = new ScatterPlot(data);
-
-    new TimeSelector(
-      extent(data, (d) => this.parseTime(d.time)),
-      (newTime) => {
-        this.setTime(newTime);
-        this.scatterRef.setTime(newTime);
-      }
-    );
+    new TimeSelector(data.timeExtent, (newTime) => {
+      this.setTime(newTime);
+      this.scatterRef.setTime(newTime);
+    });
   }
 
   draw() {
@@ -65,7 +55,9 @@ export default class ChoroplethMap {
         // The numerical id of the geographical region
         const regionId = select(nodes[i]).node().id.split('-')[1];
 
-        const dataForTimeAndRegion = this.data.get(this.selectedTime)?.get(regionId);
+        const dataForTimeAndRegion = this.data.groupedByTimeAndLocation
+          .get(this.selectedTime)
+          ?.get(regionId);
 
         // Check if there are no reports in the selected region at the selected time
         let theMean = undefined;
@@ -74,7 +66,7 @@ export default class ChoroplethMap {
           svgElement.style('fill', '#eeeeee');
         } else {
           theMean = mean(dataForTimeAndRegion, (d) => d[this.selectedProp]);
-          svgElement.style('fill', myColor(theMean));
+          svgElement.style('fill', myColor(theMean) || '#eeeeee');
         }
 
         // TODO Make sure this doesnt add a gazillion eventlisteners

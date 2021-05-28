@@ -28,12 +28,7 @@ export default class ScatterPlot {
     this.selectedTime = this.parseTime('2020-04-06 00:00:00');
     this.selectedProp = 'shake_intensity';
 
-    this.ungroupedData = data;
-    this.data = group(
-      data,
-      (d) => this.parseTime(d.time),
-      (d) => d.location
-    );
+    this.data = data;
 
     this.initializeAxes();
     this.drawPoints();
@@ -66,7 +61,7 @@ export default class ScatterPlot {
 
   drawPoints() {
     this.dots.html('');
-    const dataForSelectedTime = this.data.get(this.selectedTime);
+    const dataForSelectedTime = this.data.groupedByTimeAndLocation.get(this.selectedTime);
     dataForSelectedTime?.forEach((dataForLocation, key) => {
       const currentLocationId = dataForLocation[0].location;
       const occurences = getNumberOfReportsPerValue(dataForLocation, this.selectedProp);
