@@ -16,13 +16,15 @@ export default class TimeSelector {
     this.svg = select('#time-selector')
       .append('svg')
       .attr('width', this.width + this.margin.left + this.margin.right)
-      .attr('height', this.height + this.margin.top + this.margin.bottom)
+      .attr('height', this.height + this.margin.top + this.margin.bottom);
+
+    this.g = this.svg
       .append('g')
       .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
 
     this.scale = scaleTime().domain(extent).range([0, this.width]);
     this.axis = axisBottom().scale(this.scale);
-    this.svg
+    this.g
       .append('g')
       .attr('class', 'selector-axis')
       .attr('transform', `translate(0, ${this.height})`)
@@ -34,7 +36,7 @@ export default class TimeSelector {
   }
 
   intializeSelector() {
-    this.selector = this.svg.append('g');
+    this.selector = this.g.append('g');
 
     this.selector
       .append('line')
@@ -51,17 +53,17 @@ export default class TimeSelector {
       .attr('cy', this.height / 2)
       .attr('r', 8);
 
-    this.selectorText = this.selector
-      .attr('text-anchor', 'middle')
+    this.selectorText = this.svg
       .append('text')
-      .text(timeFormat('%B %d, %H:%M')(this.selectedTime));
+      .attr('text-anchor', 'left')
+      .attr('transform', `translate(0, 70)`)
+      .text(timeFormat('%a %B %d, %H:%M')(this.selectedTime));
 
     this.selector.call(
-      // TODO Fix dragging outside range
       drag().on('drag', (event, d) => {
         const temp = this.scale.invert(clamp(event.x, 0, this.width));
         this.selectedTime = this.restrictToDiscreteTimePoints(temp);
-        this.selectorText.text(timeFormat('%B %d, %H:%M')(this.selectedTime));
+        this.selectorText.text(timeFormat('%a %B %d, %H:%M')(this.selectedTime));
         this.selector.attr('transform', `translate(${clamp(event.x, 0, this.width)}, 0)`);
         this.onChangeCallback(this.selectedTime);
       })
