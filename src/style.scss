@@ -24,11 +24,11 @@ html {
 
 div.tooltip {
   position: absolute;
-  text-align: center;
+  // text-align: center;
   height: $tooltip-height;
   padding: 2px;
   opacity: 0;
-  font: 12px sans-serif;
+  // font: 12px sans-serif;
   background: white;
   border: 2px;
   border-style: solid;

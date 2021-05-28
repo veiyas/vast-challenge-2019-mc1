@@ -9,7 +9,7 @@ export default class TimeSelector {
     this.div = document.getElementById('time-selector');
     const containerWidth = this.div.clientWidth;
     // const containerHeight = this.div.clientHeight;
-    this.margin = { top: 30, right: 0, bottom: 30, left: 250 };
+    this.margin = { top: 30, right: 40, bottom: 30, left: 250 };
     this.width = containerWidth - this.margin.left - this.margin.right;
     this.height = 100 - this.margin.top - this.margin.bottom;
 

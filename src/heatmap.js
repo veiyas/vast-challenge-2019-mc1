@@ -9,7 +9,7 @@ export function createHeatmap(data, location, locationID, slot, mode, totNumRepo
   const isAvgPlot = mode === 'Average';
   const div = document.getElementById('heatmaps');
   const containerWidth = div.clientWidth;
-  const margin = { top: 0, right: 0, bottom: 0, left: 250 },
+  const margin = { top: 0, right: 40, bottom: 0, left: 250 },
     width = containerWidth - margin.left - margin.right,
     height = mode !== 'All' ? 40 - margin.top - margin.bottom : 75 - margin.top - margin.bottom;
 
@@ -57,7 +57,7 @@ export function createHeatmap(data, location, locationID, slot, mode, totNumRepo
           .transition()
           .duration(100)
           .style('opacity', 1.0)
-          .style('top', currentCanvas.offsetTop + 'px')
+          .style('top', currentCanvas.offsetTop - 10 + 'px')
           .style('border-color', 'black');
 
         createTooltipHeatmap(data, slot, width, margin);
