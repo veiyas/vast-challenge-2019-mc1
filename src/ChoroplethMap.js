@@ -1,4 +1,4 @@
-import { extent, group, mean, select, timeParse } from 'd3';
+import { count, extent, group, mean, select, timeParse } from 'd3';
 import { StopWatch } from './util';
 import TimeSelector from './TimeSelector';
 import { csvVariableNames, csvVariableNamesToNice, locationIdToName } from './mappings';
@@ -71,11 +71,13 @@ export default class ChoroplethMap {
 
         // Check if there are no reports in the selected region at the selected time
         let theMean = undefined;
+        let theNumberOfValidReports = undefined;
         if (dataForTimeAndRegion === undefined) {
           svgElement.style('opacity', 1);
           svgElement.style('fill', '#eeeeee');
         } else {
           theMean = mean(dataForTimeAndRegion, (d) => d[this.selectedProp]);
+          theNumberOfValidReports = count(dataForTimeAndRegion, (d) => d[this.selectedProp]);
           svgElement.style('fill', myColor(theMean) || '#eeeeee');
         }
 
@@ -89,7 +91,8 @@ export default class ChoroplethMap {
                 <div class="card">
                   <div class="card-body">
                     <h6>${locationIdToName(regionId)}</h6>
-                    Average rating: ${theMean !== undefined ? theMean.toFixed(1) : 'Unknown'}
+                    Average rating: ${theMean !== undefined ? theMean.toFixed(1) : 'Unknown'}<br>
+                    Based on ${theNumberOfValidReports} report(s)
                   </div>
                 </div>
               `
