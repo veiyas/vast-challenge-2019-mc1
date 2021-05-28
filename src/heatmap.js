@@ -1,8 +1,9 @@
-import { select, scaleBand, axisBottom, axisLeft, timeFormat, axisTop, lch, mean } from 'd3';
+import { select, scaleBand, axisBottom, axisLeft, timeFormat, axisTop, lch, mean, count } from 'd3';
 import { csvVariableNames } from './mappings';
 import { myColor } from './globalConfigs';
 
 const tooltipHeight = 110;
+const timeStep = 5; // Minutes; MUST match with the grouping of the data received
 
 export function createHeatmap(data, location, locationID, slot, mode, totNumReports) {
   const isAvgPlot = mode === 'Average';
@@ -78,7 +79,11 @@ function printHeatmap(data, context, svg, slot, mode, width, height, margin, isT
   // Dates and timepoints
   const end = new Date('2020-04-11T00:00:00');
   const timePoints = [];
-  for (let dt = new Date('2020-04-06T00:00:00'); dt <= end; dt.setMinutes(dt.getMinutes() + 5)) {
+  for (
+    let dt = new Date('2020-04-06T00:00:00');
+    dt <= end;
+    dt.setMinutes(dt.getMinutes() + timeStep)
+  ) {
     timePoints.push(new Date(dt));
   }
 
@@ -147,8 +152,19 @@ function printHeatmap(data, context, svg, slot, mode, width, height, margin, isT
     } else {
       for (let index = 0; index < myVars.length; index++) {
         const theMean = mean(dataPointsAtTime, (d) => d[csvVariableNames.get(myVars[index])]);
+        // const numberOfValues = count(
+        //   dataPointsAtTime,
+        //   (d) => d[csvVariableNames.get(myVars[index])]
+        // );
         if (theMean !== undefined) {
           context.beginPath();
+          // context.globalAlpha = numberOfValues * 0.04;
+          // context.rect(
+          //   x(time),
+          //   y(myVars[index]),
+          //   x.bandwidth(),
+          //   y.bandwidth() * Math.log(numberOfValues) * 0.3
+          // );
           context.rect(x(time), y(myVars[index]), x.bandwidth(), y.bandwidth());
           context.fillStyle = myColor(theMean);
           context.fill();

@@ -1,4 +1,4 @@
-import { extent, group, rollup, sum, timeParse, mean } from 'd3';
+import { extent, group, rollup, sum, timeParse, mean, timeHour } from 'd3';
 
 export default class ProcessedData {
   constructor(rawData) {
@@ -26,6 +26,12 @@ export default class ProcessedData {
       this.data,
       (d) => d.location,
       (d) => this.parseTime(d.time)
+    );
+
+    this.groupedByLocationAndHour = group(
+      this.data,
+      (d) => d.location,
+      (d) => timeHour.floor(this.parseTime(d.time))
     );
 
     this.totalNumberOfReportsPerLocation = new Map();
