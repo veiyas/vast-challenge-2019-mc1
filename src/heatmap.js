@@ -1,16 +1,4 @@
-import {
-  select,
-  scaleBand,
-  scaleLinear,
-  axisBottom,
-  axisLeft,
-  timeFormat,
-  axisTop,
-  lch,
-  scaleSequential,
-  interpolateYlOrRd,
-  mean,
-} from 'd3';
+import { select, scaleBand, axisBottom, axisLeft, timeFormat, axisTop, lch, mean } from 'd3';
 import { csvVariableNames } from './mappings';
 import { myColor } from './globalConfigs';
 
