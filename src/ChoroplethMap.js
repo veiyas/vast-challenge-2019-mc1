@@ -35,6 +35,16 @@ export default class ChoroplethMap {
       .attr('class', 'tooltip-choropleth')
       .style('opacity', 0);
 
+    const desc = select('#choropleth-desc').text('Color scale: ');
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach((rating) => {
+      desc
+        .append('span')
+        .text(rating)
+        .style('background-color', myColor(rating))
+        .style('color', rating < 5 ? 'black' : 'white')
+        .style('padding', '0 0.5rem');
+    });
+
     this.draw();
     stopWatch.stop();
 
