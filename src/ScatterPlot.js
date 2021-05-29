@@ -65,10 +65,12 @@ export default class ScatterPlot {
     dataForSelectedTime?.forEach((dataForLocation, key) => {
       const currentLocationId = dataForLocation[0].location;
       const occurences = getNumberOfReportsPerValue(dataForLocation, this.selectedProp);
-      this.dots
+      const currentDotGroup = this.dots
         .append('g')
         .attr('id', `region-${currentLocationId}-group`)
-        .attr('class', 'dots-group')
+        .attr('class', 'dots-group');
+
+      currentDotGroup
         .selectAll('dot')
         .data(occurences)
         .enter()
@@ -78,7 +80,28 @@ export default class ScatterPlot {
         .attr('r', (d) => Math.sqrt(d.occurences * 0.9))
         .style('fill', (d) => myColor(d.rating))
         .style('stroke', 'black')
-        .style('stroke-width', '0.5px');
+        .style('stroke-width', '0.5px')
+        .on('mouseover', (event, d) => {
+          this.highlightLocation(+currentLocationId);
+        })
+        .on('mouseout', () => {
+          this.highlightLocation(null);
+        });
+
+      currentDotGroup
+        .append('g')
+        .attr('class', 'occurences-text')
+        .style('opacity', 0)
+        .selectAll('dots')
+        .data(occurences)
+        .enter()
+        .filter((d) => d.occurences !== 0)
+        .append('text')
+        .attr('x', (d) => this.x(d.rating))
+        .attr('y', (d) => this.y(currentLocationId) - Math.sqrt(d.occurences) - 4)
+        .text((d) => d.occurences)
+        .style('text-anchor', 'middle')
+        .style('color', 'black');
     });
   }
 
@@ -105,11 +128,15 @@ export default class ScatterPlot {
       .selectAll('.dots-group')
       .transition()
       .duration(locationId ? 50 : 200)
-      .style('opacity', locationId ? 0.2 : 1);
+      .style('opacity', locationId ? 0.2 : 1)
+      .select('.occurences-text')
+      .style('opacity', 0);
     this.dots
       .select(`#region-${locationId}-group`)
       .transition()
       .duration(locationId ? 50 : 200)
+      .style('opacity', 1)
+      .select('.occurences-text')
       .style('opacity', 1);
   }
 }
