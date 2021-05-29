@@ -119,7 +119,10 @@ function getNumberOfReportsPerValue(data, selectedProp) {
   if (!data) return numOcc;
 
   for (const d of data) {
-    numOcc[+d[selectedProp]] += 1;
+    const rating = d[selectedProp];
+    if (rating !== null) {
+      numOcc[+rating] += 1;
+    }
   }
 
   return numOcc.map((x, i) => {
