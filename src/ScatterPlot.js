@@ -26,7 +26,7 @@ export default class ScatterPlot {
 
     this.parseTime = timeParse('%Y-%m-%d %H:%M:%S');
     this.selectedTime = this.parseTime('2020-04-06 00:00:00');
-    this.selectedProp = 'shake_intensity';
+    this.selectedProp = 'Average';
 
     this.data = data;
 
