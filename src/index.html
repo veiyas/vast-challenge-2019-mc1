@@ -31,7 +31,6 @@
           </button> -->
           <select id="variable-select" class="form-select" aria-label="Default select example">
             <option selected>Average</option>
-            <option>All</option>
             <option>Sewer & Water</option>
             <option>Power</option>
             <option>Roads & Bridges</option>
@@ -45,9 +44,9 @@
       <main class="pb-4">
         <div id="choropleth-container" class="pb-5">
           <div class="row">
-            <h2 class="h5">TODO: Handle All and Average</h2>
-            <p>Blurben flörb flurb</p>
             <div class="col">
+              <h2 class="h5">Average rating for selected time period</h2>
+              <p id="choropleth-desc">Blurben flörb flurb</p>
               <div class="row h-100">
                 <div class="col-sm-12 my-auto">
                   <div id="map-test"></div>
@@ -55,6 +54,8 @@
               </div>
             </div>
             <div class="col">
+              <h2 class="h5">Distribution of ratings at the selected time</h2>
+              <p>Bigger dots means more reports</p>
               <div id="scatter"></div>
             </div>
           </div>
@@ -63,12 +64,16 @@
           </div>
         </div>
 
-        <div id="heatmaps-container">
-          <h2 class="h5">Average rating per 5 min interval</h2>
+        <div id="heatmaps-container" class="position-relative">
+          <h2 class="h5">Average rating per 5 min interval over time</h2>
           <p>
             The recieved ratings for a variable in a 5 minute interval averaged. Numbers in
             parenthesis are the total number of reports for that location.
           </p>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="show-all" />
+            <label class="form-check-label" for="show-all">Show all categories</label>
+          </div>
           <div id="heatmaps" class="position-relative"></div>
           <div class="tooltip" id="tooltip-div"></div>
         </div>

@@ -1,4 +1,4 @@
-import { extent, group, mean, select, timeParse } from 'd3';
+import { count, extent, group, mean, select, timeParse } from 'd3';
 import { StopWatch } from './util';
 import TimeSelector from './TimeSelector';
 import { csvVariableNames, csvVariableNamesToNice, locationIdToName } from './mappings';
@@ -17,7 +17,7 @@ export default class ChoroplethMap {
     this.parseTime = timeParse('%Y-%m-%d %H:%M:%S');
 
     this.selectedTime = this.parseTime('2020-04-06 00:00:00');
-    this.selectedProp = 'shake_intensity';
+    this.mode = 'Average';
 
     // Add the map svg
     select('#map-test').node().append(this.mapSvg.documentElement);
@@ -36,6 +36,16 @@ export default class ChoroplethMap {
       .append('div')
       .attr('class', 'tooltip-choropleth')
       .style('opacity', 0);
+
+    const desc = select('#choropleth-desc').text('Color scale: ');
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach((rating) => {
+      desc
+        .append('span')
+        .text(rating)
+        .style('background-color', myColor(rating))
+        .style('color', rating < 5 ? 'black' : 'white')
+        .style('padding', '0 0.5rem');
+    });
 
     this.draw();
     stopWatch.stop();
@@ -61,14 +71,34 @@ export default class ChoroplethMap {
           .get(this.selectedTime)
           ?.get(regionId);
 
-        // Check if there are no reports in the selected region at the selected time
-        let theMean = undefined;
+        let theValue = undefined;
+        let theNumberOfValidReports = undefined;
         if (dataForTimeAndRegion === undefined) {
           svgElement.style('opacity', 1);
           svgElement.style('fill', '#eeeeee');
         } else {
-          theMean = mean(dataForTimeAndRegion, (d) => d[this.selectedProp]);
-          svgElement.style('fill', myColor(theMean) || '#eeeeee');
+          if (this.mode === 'Average') {
+            const means = [];
+            for (const [iLikeCookies, csvName] of csvVariableNames) {
+              const theMean = mean(dataForTimeAndRegion, (d) => d[csvName]);
+              if (theMean !== undefined) {
+                means.push(theMean);
+              }
+            }
+            theValue = mean(means);
+            if (theValue !== undefined) {
+              theNumberOfValidReports = dataForTimeAndRegion.length;
+              svgElement.style('fill', myColor(theValue) || '#eeeeee');
+            }
+          } else if (this.mode === 'All') {
+            console.error('This should not happen hehe');
+          } else {
+            // Check if there are no reports in the selected region at the selected time
+            const selectedProp = csvVariableNames.get(this.mode);
+            theValue = mean(dataForTimeAndRegion, (d) => d[selectedProp]);
+            theNumberOfValidReports = count(dataForTimeAndRegion, (d) => d[selectedProp]);
+            svgElement.style('fill', myColor(theValue) || '#eeeeee');
+          }
         }
 
         // TODO Make sure this doesnt add a gazillion eventlisteners
@@ -81,7 +111,10 @@ export default class ChoroplethMap {
                 <div class="card">
                   <div class="card-body">
                     <h6>${locationIdToName(regionId)}</h6>
-                    Average rating: ${theMean !== undefined ? theMean.toFixed(1) : 'Unknown'}
+                    Average rating: ${theValue !== undefined ? theValue.toFixed(1) : 'Unknown'}<br>
+                    Based on ${
+                      theNumberOfValidReports !== undefined ? theNumberOfValidReports : 'no'
+                    } report(s)
                   </div>
                 </div>
               `
@@ -103,9 +136,8 @@ export default class ChoroplethMap {
   }
 
   setMode(mode) {
-    if (mode === 'All' || mode === 'Average')
-      console.error('All or Average are not supported by choropleth map atm');
-    this.selectedProp = csvVariableNames.get(mode);
+    if (mode === 'All') console.error('All or Average are not supported by choropleth map atm');
+    this.mode = mode;
     this.draw();
     this.scatterRef.setMode(mode);
   }

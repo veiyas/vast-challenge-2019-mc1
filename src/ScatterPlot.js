@@ -26,7 +26,7 @@ export default class ScatterPlot {
 
     this.parseTime = timeParse('%Y-%m-%d %H:%M:%S');
     this.selectedTime = this.parseTime('2020-04-06 00:00:00');
-    this.selectedProp = 'shake_intensity';
+    this.selectedProp = 'Average';
 
     this.data = data;
 
@@ -119,7 +119,10 @@ function getNumberOfReportsPerValue(data, selectedProp) {
   if (!data) return numOcc;
 
   for (const d of data) {
-    numOcc[+d[selectedProp]] += 1;
+    const rating = d[selectedProp];
+    if (rating !== null) {
+      numOcc[+rating] += 1;
+    }
   }
 
   return numOcc.map((x, i) => {
