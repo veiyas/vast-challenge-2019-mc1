@@ -40,9 +40,9 @@ export default class TimeSelector {
   initializeStepKeys() {
     document.addEventListener('keydown', (key) => {
       if (key.code === 'ArrowLeft') {
-        this.selectedTime.setMinutes(this.selectedTime.getMinutes() - 5);
+        this.selectedTime.setMinutes(this.selectedTime.getMinutes() - this.timeStep);
       } else if (key.code === 'ArrowRight') {
-        this.selectedTime.setMinutes(this.selectedTime.getMinutes() + 5);
+        this.selectedTime.setMinutes(this.selectedTime.getMinutes() + this.timeStep);
       }
 
       this.selectorText.text(timeFormat('%a %B %d, %H:%M')(this.selectedTime));
