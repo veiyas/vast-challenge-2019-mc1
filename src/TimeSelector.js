@@ -1,5 +1,5 @@
 import { scaleTime } from 'd3-scale';
-import { select, selectAll, timeParse, timeFormat, axisBottom, brushX, drag } from 'd3';
+import { select, selectAll, timeParse, timeFormat, axisBottom, brushX, drag, count } from 'd3';
 import { clamp } from './util';
 
 export default class TimeSelector {
@@ -33,6 +33,21 @@ export default class TimeSelector {
     this.selectedTime = extent[0]; // TODO Fix
 
     this.intializeSelector();
+    this.initializeStepKeys();
+  }
+
+  initializeStepKeys() {
+    document.addEventListener('keydown', (key) => {
+      if (key.code === 'ArrowLeft') {
+        this.selectedTime.setMinutes(this.selectedTime.getMinutes() - 5);
+      } else if (key.code === 'ArrowRight') {
+        this.selectedTime.setMinutes(this.selectedTime.getMinutes() + 5);
+      }
+
+      this.selectorText.text(timeFormat('%a %B %d, %H:%M')(this.selectedTime));
+      this.selector.attr('transform', `translate(${this.scale(this.selectedTime)}, 0)`);
+      this.onChangeCallback(this.selectedTime);
+    });
   }
 
   intializeSelector() {
